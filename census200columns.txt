@@ -1,0 +1,77 @@
+list of columns to take from the 2000 census
+SUMMARY FILE 1
+STATE
+STATEAB
+TRACT
+BLOCK
+AREALAND
+AREAWTR
+POP100
+H001001 - housing in total
+H002001 - housing in urban
+H002005 - housing in rural
+H003001 - occupancy status total
+H003002 - occupancy status occupied
+H003002 - occupancy status vacant
+P001001 - Population:Total
+P002001 - urban and rural population
+P002002 - urban population
+P002005 - rural population
+P003001 - Race total
+P003002 - Race just 1
+P003003 - Race total white
+P003004 - Race total black
+P003005 - Race total American Indians/ alaskan
+P003006 - Race total Asian
+P003007 - Race total Hawaiian or pacific islander?
+P003008 - Race total etc
+P003009 - Race total 2+
+P003010 - Races 2
+P003026 - Races 3
+P003047 - Races 4
+P003063 - Races 5
+P003070 - Races 6
+P004001 - Hispanic Total hispanic and not hispanic
+P004002 - Hispanic Total hispanic or latino
+P004003 - not Hispanic or latino
+P012001 - SEX by age male and female
+P012002 - SEX by age male
+P012026 - SEX by age female
+P012A001 - SEX by age white
+P012A002 - sex by age white male
+P012A026 - sex by age white female
+P012B001 - sex by age Black
+P012B002 - sex by age black males
+P012B026 - sex by age black female
+P012C001 - sex by age American Indians and alaskans total
+P012C002 - sex by age American Indians and alaskans Male
+P012C026 - sex by age American Indians and alaskans Female
+P012D001 - sex by age Asians total
+P012D002 - sex by age Asians total male
+P012D026 = sex by age Asians total female
+P012E001 - sex by age Hawaiian or pacific islander  total
+P012E002 - sex by age Hawaiian or pacific islander total male
+P012E026 = sex by age Hawaiian or pacific islander total female
+P012F001 - sex by other  total
+P012F002 - sex by other total male
+P012F026 = sex by other total female
+P012G001 - sex by 2+  total
+P012G002 - sex by 2+ total male
+P012G026 = sex by 2+ total female
+P012H001 - sex by HISP  total
+P012H002 - sex by HISP total male
+P012H026 = sex by HISP total female
+P012I001 - sex by !HISP  total
+P012I002 - sex by !HISP total male
+P012I026 = sex by !HISP total female
+P013001 - Median Age both sexes
+P013A001 - Median Age white
+P013B001 - Median Age Black
+P013C001 - Median Age American Indian/ Alaksan
+P013D001 - Median Age Asian
+P013E001 - Median Age Hawaiian pacific islander
+P013F001 - Median Age other
+P013G001 - Median Age 2+
+P013H001 - Median Age hisp
+P013AI001 - Median Age !hisp
+

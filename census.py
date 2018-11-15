@@ -1,4 +1,6 @@
 import requests
+import pyodbc
+
 key="a240c63f4d5f8800f399ea2bf7219f27a5e11aff"
 #https://api.census.gov/data/2010/dec/sf1 #October 31st
 url1 ='https://api.census.gov/data/2000/sf1?get='+\
@@ -11,7 +13,7 @@ url1 ='https://api.census.gov/data/2000/sf1?get='+\
 ',H002005'+\
 ',H003001'+\
 ',H003002'+\
-',H003002'+\
+',H003003'+\
 ',P001001'+\
 ',P002001'+\
 ',P002002'+\
@@ -83,9 +85,34 @@ f'&for=tract:*&in=state:42&key={key}'
 response1 = requests.get(url1)
 data1 = response1.json()
 response2 = requests.get(url2)
-data2 = response2.json()
 
-limit = len(data1)
+data2 = response2.json()
+server = 'Driver={ODBC Driver 13 for SQL Server};Server=tcp:drexelcensus.database.windows.net,1433;Database=census_database;Uid=luigi@drexelcensus;Pwd=Itwillbe@b@dd@yInhellIfwef@il10105959;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;'
+cnxn = pyodbc.connect(server)
+cursor = cnxn.cursor()
+
+'''limit = len(data1)
+attribute_limit = len(data1[0]) -3
+
 for i in range(1,limit):
-    if data1[i][1] != data2[i][1]:
-        print("bad!")
+        sqlstatement='INSERT INTO census_table_1 VALUES('
+        for j in range(0,attribute_limit):
+                sqlstatement+= data1[i][j]
+                if j < attribute_limit-1:
+                        sqlstatement += ','
+        sqlstatement+=')'
+        cursor.execute(sqlstatement)
+        cursor.commit()
+'''
+limit = len(data2)
+attribute_limit = len(data2[0]) -3
+
+for i in range(1,limit):
+        sqlstatement='INSERT INTO census_table_2 VALUES('
+        for j in range(0,attribute_limit):
+                sqlstatement+= data2[i][j]
+                if j < attribute_limit-1:
+                        sqlstatement += ','
+        sqlstatement+=')'
+        cursor.execute(sqlstatement)
+        cursor.commit()

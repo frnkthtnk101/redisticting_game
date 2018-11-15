@@ -12,7 +12,7 @@ H002001 - housing in urban
 H002005 - housing in rural
 H003001 - occupancy status total
 H003002 - occupancy status occupied
-H003002 - occupancy status vacant
+H003003 - occupancy status vacant
 P001001 - Population:Total
 P002001 - urban and rural population
 P002002 - urban population

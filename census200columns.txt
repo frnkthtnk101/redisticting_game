@@ -1,11 +1,11 @@
 list of columns to take from the 2000 census
 SUMMARY FILE 1
 STATE
-STATEAB
-TRACT
+STATEAB -no good
+TRACT 
 BLOCK
 AREALAND
-AREAWTR
+AREAWTR - no good
 POP100
 H001001 - housing in total
 H002001 - housing in urban

@@ -1,9 +1,10 @@
 /*
  * Tract.h
  *
- *      Author: scarbors
+ *      Author: scarbors, frnkthtnk100
  */
 #include <string>
+#include <vector>
 #ifndef TRACT_H_
 #define TRACT_H_
 using namespace std;
@@ -13,9 +14,11 @@ namespace AIProj
   typedef size_t tractId;
   typedef string tractMetric;
 
+
   class Tract
   {
     char _STATE;
+
     int _TRACT,_AREALAND,_POP100,_H001001,_H002001,_H002005,_H003001,_H003002;
     int _H003003,_P001001,_P002001,_P002002,_P002005,_P003001,_P003002,_P003003;
     int _P003004,_P003005,_P003006,_P003007,_P003008,_P003009,_P003010,_P003026;
@@ -26,6 +29,7 @@ namespace AIProj
     int _P012G026,_P012H001,_P012H002,_P012H026,_P012I001,_P012I002,_P012I026;
     int _P013001,_P013A001,_P013B001,_P013C001,_P013D001,_P013E001,_P013F001;
     int _P013G001,_P013H001,_P013I001;
+    vector<int> _neighbors;
 
   public:
 
@@ -111,6 +115,8 @@ namespace AIProj
     int get_P013G001();
     int get_P013H001();
     int get_P013I001();
+    void set_neighbors(int[]);
+    int get_neighbor(int);
     virtual
     ~Tract ();
   };

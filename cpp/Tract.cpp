@@ -1,7 +1,7 @@
 /*
  * Tract.cpp
  *
- *      Author: scarbors
+ *      Author: scarbors, frnkthtnk100
  */
 
 #include "Tract.h"
@@ -90,6 +90,14 @@ namespace AIProj
   {
     // TODO Auto-generated destructor stub
   }
+
+  void Tract::set_neighbors(int t[]){
+    _neighbors = vector<int>(t,t+sizeof(t)/sizeof(int));
+  }
+
+  int Tract::get_neighbor(int t){
+    return _neighbors.at(t);
+  } 
 
   char Tract::get_STATE(){
 		return _STATE;
@@ -308,6 +316,6 @@ namespace AIProj
 } /* namespace AIProj */
 
 //compile testing
-/*int main(){
+int main(){
   return 1;
-}*/
+}

@@ -91,8 +91,8 @@ server = 'Driver={ODBC Driver 13 for SQL Server};Server=tcp:drexelcensus.databas
 cnxn = pyodbc.connect(server)
 cursor = cnxn.cursor()
 
-'''limit = len(data1)
-attribute_limit = len(data1[0]) -3
+limit = len(data1)
+attribute_limit = len(data1[0]) - 2
 
 for i in range(1,limit):
         sqlstatement='INSERT INTO census_table_1 VALUES('
@@ -103,9 +103,9 @@ for i in range(1,limit):
         sqlstatement+=')'
         cursor.execute(sqlstatement)
         cursor.commit()
-'''
+
 limit = len(data2)
-attribute_limit = len(data2[0]) -3
+attribute_limit = len(data2[0]) - 2
 
 for i in range(1,limit):
         sqlstatement='INSERT INTO census_table_2 VALUES('

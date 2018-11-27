@@ -28,14 +28,14 @@ namespace AIProj
      * @brief Retrieves the current district population
      * @return
      */
-    size_t getCurrentPopulation();
+    size_t getCurrentPopulation() const { return population_; };
 
     /**
      * @brief Retrieves the Population total of the metric
      * @param
      * @return
      */
-    size_t getMetricTotal(const tractMetric& );
+    size_t getMetricTotal(const tractMetric& ) const { return metricTotals_[tractMetric]; };
 
     /**
      * @brief Run the heuristics and see if we want this tract

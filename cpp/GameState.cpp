@@ -12,11 +12,6 @@ namespace AIProj
 
   GameState::GameState ()
   {
-    // TODO Auto-generated constructor stub
-    //get tract information
-    //find important counties
-    //play
-    //produce results
 
   }
 

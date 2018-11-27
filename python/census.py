@@ -1,5 +1,6 @@
 import requests
 import pyodbc
+import csv
 
 key="a240c63f4d5f8800f399ea2bf7219f27a5e11aff"
 #https://api.census.gov/data/2010/dec/sf1 #October 31st
@@ -92,27 +93,98 @@ cnxn = pyodbc.connect(server)
 cursor = cnxn.cursor()
 
 limit = len(data1)
-attribute_limit = len(data1[0]) - 2
+
+
+
 
 for i in range(1,limit):
+        
         sqlstatement='INSERT INTO census_table_1 VALUES('
-        for j in range(0,attribute_limit):
-                sqlstatement+= data1[i][j]
-                if j < attribute_limit-1:
-                        sqlstatement += ','
+        sqlstatement+=data1[i][0]+','
+        sqlstatement+=data1[i][36]+','
+        sqlstatement+=data1[i][1]+','
+        sqlstatement+=data1[i][2]+','
+        sqlstatement+=data1[i][3]+','
+        sqlstatement+=data1[i][4]+','
+        sqlstatement+=data1[i][5]+','
+        sqlstatement+=data1[i][6]+','
+        sqlstatement+=data1[i][7]+','
+        sqlstatement+=data1[i][8]+','
+        sqlstatement+=data1[i][9]+','
+        sqlstatement+=data1[i][10]+','
+        sqlstatement+=data1[i][11]+','
+        sqlstatement+=data1[i][12]+','
+        sqlstatement+=data1[i][13]+','
+        sqlstatement+=data1[i][14]+','
+        sqlstatement+=data1[i][15]+','
+        sqlstatement+=data1[i][16]+','
+        sqlstatement+=data1[i][17]+','
+        sqlstatement+=data1[i][18]+','
+        sqlstatement+=data1[i][19]+','
+        sqlstatement+=data1[i][20]+','
+        sqlstatement+=data1[i][21]+','
+        sqlstatement+=data1[i][22]+','
+        sqlstatement+=data1[i][23]+','
+        sqlstatement+=data1[i][24]+','
+        sqlstatement+=data1[i][25]+','
+        sqlstatement+=data1[i][26]+','
+        sqlstatement+=data1[i][27]+','
+        sqlstatement+=data1[i][28]+','
+        sqlstatement+=data1[i][29]+','
+        sqlstatement+=data1[i][30]+','
+        sqlstatement+=data1[i][31]+','
+        sqlstatement+=data1[i][32]+','
+        sqlstatement+=data1[i][33]+','
+        sqlstatement+=data1[i][34]
         sqlstatement+=')'
         cursor.execute(sqlstatement)
         cursor.commit()
+        print(data1[i][1], sqlstatement)
 
 limit = len(data2)
-attribute_limit = len(data2[0]) - 2
+
 
 for i in range(1,limit):
         sqlstatement='INSERT INTO census_table_2 VALUES('
-        for j in range(0,attribute_limit):
-                sqlstatement+= data2[i][j]
-                if j < attribute_limit-1:
-                        sqlstatement += ','
+        sqlstatement+= data2[i][0] + ','
+        sqlstatement+= data2[i][39] + ','
+        sqlstatement+= data2[i][1] + ','
+        sqlstatement+= data2[i][2] + ','
+        sqlstatement+= data2[i][3] + ','
+        sqlstatement+= data2[i][4] + ','
+        sqlstatement+= data2[i][5] + ','
+        sqlstatement+= data2[i][6] + ','
+        sqlstatement+= data2[i][7] + ','
+        sqlstatement+= data2[i][8] + ','
+        sqlstatement+= data2[i][9] + ','
+        sqlstatement+= data2[i][10] + ','
+        sqlstatement+= data2[i][11] + ','
+        sqlstatement+= data2[i][12] + ','
+        sqlstatement+= data2[i][13] + ','
+        sqlstatement+= data2[i][14] + ','
+        sqlstatement+= data2[i][15] + ','
+        sqlstatement+= data2[i][16] + ','
+        sqlstatement+= data2[i][17] + ','
+        sqlstatement+= data2[i][18] + ','
+        sqlstatement+= data2[i][19] + ','
+        sqlstatement+= data2[i][20] + ','
+        sqlstatement+= data2[i][21] + ','
+        sqlstatement+= data2[i][22] + ','
+        sqlstatement+= data2[i][23] + ','
+        sqlstatement+= data2[i][24] + ','
+        sqlstatement+= data2[i][25] + ','
+        sqlstatement+= data2[i][26] + ','
+        sqlstatement+= data2[i][27] + ','
+        sqlstatement+= data2[i][28] + ','
+        sqlstatement+= data2[i][29] + ','
+        sqlstatement+= data2[i][30] + ','
+        sqlstatement+= data2[i][31] + ','
+        sqlstatement+= data2[i][32] + ','
+        sqlstatement+= data2[i][33] + ','
+        sqlstatement+= data2[i][34] + ','
+        sqlstatement+= data2[i][35] + ','
+        sqlstatement+= data2[i][36] + ','
+        sqlstatement+= data2[i][37]
         sqlstatement+=')'
         cursor.execute(sqlstatement)
         cursor.commit()

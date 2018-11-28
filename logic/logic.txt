@@ -33,7 +33,7 @@ bool District::take_turn(){
     list-best-choice = [] #same size as list-Aviable-Moves
     size = len(list-Aviable-Moves)
     for (int i = 0 ; i < size; i++){
-        list-best-choice.append(0,District::list-Aviable-Moves[i])
+        list-best-choice.append(District::calculate_choice(0,list-Aviable-Moves[i])
     }
     Index = 0
     Highest = 0
@@ -44,7 +44,7 @@ bool District::take_turn(){
         }
     }
     if(index != 0 and Highest!= 0){
-        District::addTract(0,list-Aviable-Moves[Index])
+        District::addTract(list-Aviable-Moves[Index])
     }
     else
     {
@@ -91,6 +91,30 @@ bool District::no_racial_bias(Tract* tract){
     PA is white. I dont think PA really takes this into consideration..
 }
 
+set<tracts*> District::get-track-boundry-tracks(){
+    q = query_get_neighbortracts(District::ownedTracts_->fid)
+    set<tract*> temp;
+    foreach tuple in q{
+        if !tuple->taken
+            temp.insert(tuple)
+    }
+    return temp;
+}
+
+set<tracts*> District::get-track-boundry-tracks(Tract* tract){
+    q = query_get_neighbortracts(tract->fid)
+    set<tract*> temp;
+    foreach tuple in q{
+        if !tuple->taken
+            temp.insert(tuple)
+    }
+    return temp;
+}
+
+void District::addTract(Tract* tract){
+    District:ownedTracts_.insert(tract)
+    District:addmetrixs(tract)
+}
 
 *If you read the book 'The big sort, why the clustering
 like minded america is tearing us apart' believes this happen over the period of 50 years.

@@ -26,9 +26,8 @@ namespace AIProj
 
 tractId
 District::makeTractDecision (
-    const std::shared_ptr<std::set<std::shared_ptr<AIProj::Tract> > >)
+    const std::shared_ptr<std::set<std::shared_ptr<AIProj::Tract> > > availableTracts)
 {
-  //TODO
   return tractId();
 }
 

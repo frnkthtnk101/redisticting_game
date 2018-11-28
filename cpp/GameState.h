@@ -124,7 +124,6 @@ inline const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > AIPro
 		  {
 		    adjacencySet.insert(tractMap_.at(nItr));
 		  }
-		//adjacencySet.insert(neighbors.begin(), neighbors.end() );
 	}
 
 	//Remove from the available list any tract that isn't in the adjacency set

@@ -314,8 +314,3 @@ namespace AIProj
   }
 
 } /* namespace AIProj */
-
-//compile testing
-int main(){
-  return 1;
-}

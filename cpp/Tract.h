@@ -3,16 +3,20 @@
  *
  *      Author: scarbors, frnkthtnk100
  */
+
+#include <map>
+#include <set>
 #include <string>
 #include <vector>
+
 #ifndef TRACT_H_
 #define TRACT_H_
 using namespace std;
 
 namespace AIProj
 {
-  typedef size_t tractId;
-  typedef string tractMetric;
+  typedef std::pair<size_t,size_t> tractId; //County Id, Tract Id
+  typedef std::string tractMetric;
 
 
   class Tract
@@ -29,9 +33,11 @@ namespace AIProj
     int _P012G026,_P012H001,_P012H002,_P012H026,_P012I001,_P012I002,_P012I026;
     int _P013001,_P013A001,_P013B001,_P013C001,_P013D001,_P013E001,_P013F001;
     int _P013G001,_P013H001,_P013I001;
-    vector<int> _neighbors;
 
   public:
+
+    Tract (tractId, std::map<tractMetric,size_t>);
+    virtual ~Tract ();
 
     Tract (char C_STATE, int C_TRACT, int C_AREALAND, int C_POP100, int C_H001001, int C_H002001, int C_H002005, 
     int C_H003001, int C_H003002, int C_H003003, int C_P001001, int C_P002001, int C_P002002, int C_P002005, 
@@ -44,6 +50,8 @@ namespace AIProj
     int C_P012H002, int C_P012H026, int C_P012I001, int C_P012I002, int C_P012I026, int C_P013001, int C_P013A001, 
     int C_P013B001, int C_P013C001, int C_P013D001, int C_P013E001, int C_P013F001, int C_P013G001, int C_P013H001, 
     int C_P013I001);
+
+
     char get_STATE();
     int get_TRACT();
     int get_AREALAND();
@@ -117,8 +125,24 @@ namespace AIProj
     int get_P013I001();
     void set_neighbors(int[]);
     int get_neighbor(int);
-    virtual
-    ~Tract ();
+//---------------------------------------------------
+
+    const tractId& getId() const { return tractId_; } ;
+
+    void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
+    const std::set<tractId>& getNeighbors(void) const { return neighboringTracts_; };
+
+    void addAttributes(std::vector<std::pair<tractMetric,size_t> >);
+    void addAttribute( const tractMetric&,size_t);
+    bool hasAttribute(const tractMetric&) const;
+    size_t getAttributeValue(const tractMetric&) const;
+
+  private:
+
+    tractId tractId_;
+    size_t population_;
+    std::map<tractMetric,size_t> attributeMap_;
+    std::set<tractId> neighboringTracts_;
   };
 
 } /* namespace AIProj */

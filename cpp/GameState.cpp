@@ -17,7 +17,7 @@ namespace AIProj
 
   GameState::~GameState ()
   {
-    // TODO Auto-generated destructor stub
+	  //Using shared_ptrs so no need to manually delete
   }
 
 } /* namespace AIProj */

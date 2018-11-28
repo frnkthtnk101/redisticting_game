@@ -57,9 +57,6 @@ namespace AIProj
 
     void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->getId()] = dst; };
 
-    void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->]
-
-
   private:
 
     const std::shared_ptr< std::set< std::shared_ptr<Tract> > > getTractsFromSet(const std::set<tractId> &tractVec) const;

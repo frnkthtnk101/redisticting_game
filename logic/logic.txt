@@ -1,0 +1,76 @@
+The district player
+the goal of the district player is to maximize the districts 'voice' while
+keeping in the rules based on the government and PA.
+
+'voice'
+the goal is make the people in the district feel heard and reduce gerrymandering.
+The best way to do this without actually taking in account political stance, is
+by districting people that at are similar*. By using the data by the census, we can
+do a monite carlo search to figure out what is the best choice for the district to take
+
+Rules the District player must keep in mind while playing
+-Equal Population: by federal law, the districts have to be close in population.
+'Any district with more or fewer people than the average (also known as the "ideal" population) 
+must be specifically justified by a consistent state policy. And even consistent policies that cause a 
+one percent spread from largest to smallest district will likely be unconstitutional'
+-PA congressional disctricts are 646,300 - 646,399
+
+-Race and ethnicity:by federal law we cannot dilute the racial and ethnic minorities. No cracking and no packing.
+PA is mostly white. 
+
+-Contiguity: the district borders need to stay together
+
+in PA. They dont do the other stuff.
+
+Logic
+
+
+    
+
+bool District::take_turn(){
+    list-Aviable-Moves = District::get-track-boundry-tracks() #give the Tract pointers
+    list-best-choice = [] #same size as list-Aviable-Moves
+    size = len(list-Aviable-Moves)
+    for (int i = 0 ; i < size; i++){
+        list-best-choice.append(0,District::list-Aviable-Moves[i])
+    }
+    Index = 0
+    Highest = 0
+    for(i = 0; i < size; i++){
+        if(list-best-choice[i] > Highest){
+            index = i
+            highest = list-best-choice[i]
+        }
+    }
+    if(index != 0 and Highest!= 0){
+        District::append_to_ownedTracts_(0,list-Aviable-Moves[Index])
+    }
+    else
+    {
+        return false //there is no more possible moves
+    }
+    return true //the district made its move and we still have more moves
+}
+
+int District::calculate_choice(int voice, Tract* tract){
+    if tract->population + District.getCurrentPopulation() <= POP_CEILING and no_racial_bias(tract){ // District::getCurrentPopulation? yes no?
+            voice++
+        if District.similar(tract)
+            voice++
+        list-adjacent = District::get-track-boundry-tracks(tract)
+        foreach ls_ad in list-adjacent{
+            voice = calculate_choice(voice, ls_ad)
+        }
+    } 
+    return voice
+}
+
+bool District::similar(Tract* tract){} 
+
+bool District::no_racial_bias(Tract* tract){}
+
+
+*If you read the book 'The big sort, why the clustering
+like minded america is tearing us apart' believes this happen over the period of 50 years.
+
+rules come from http://redistricting.lls.edu/where.php#equalpop

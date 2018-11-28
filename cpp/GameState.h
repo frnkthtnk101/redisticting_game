@@ -73,10 +73,6 @@ namespace AIProj
 
 } /* namespace AIProj */
 
-inline void AIProj::GameState::initializeGameStateFromDB(std::string dbRef)
-{
-	//Create Tract Objects
-}
 
 inline const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > AIProj::GameState::getAvailableTracts() const
 {

@@ -24,4 +24,19 @@ namespace AIProj
     // TODO Auto-generated destructor stub
   }
 
+tractId
+District::makeTractDecision (
+    const std::shared_ptr<std::set<std::shared_ptr<AIProj::Tract> > >)
+{
+  //TODO
+  return tractId();
+}
+
+bool
+District::testTractForAdd (const Tract&)
+{
+  //TODO
+  return false;
+}
+
 } /* namespace AIProj */

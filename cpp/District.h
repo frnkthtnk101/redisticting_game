@@ -8,6 +8,7 @@
 #define DISTRICT_H_
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include "Tract.h"
@@ -36,6 +37,13 @@ namespace AIProj
      * @return
      */
     size_t getMetricTotal(const tractMetric& tM) const { return metricTotals_.at(tM); };
+
+    /**
+     * @brief given the tract list decides on one and adds it to its list
+     * @param The tract set
+     * @return The ID of the added tract
+     */
+    tractId makeTractDecision(const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > >);
 
     /**
      * @brief Run the heuristics and see if we want this tract

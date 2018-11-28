@@ -10,6 +10,7 @@
 namespace AIProj
 {
 
+  /*
   GameState::GameState ()
   {
 
@@ -19,5 +20,5 @@ namespace AIProj
   {
 	  //Using shared_ptrs so no need to manually delete
   }
-
+*/
 } /* namespace AIProj */

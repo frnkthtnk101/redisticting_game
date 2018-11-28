@@ -8,7 +8,7 @@
 
 namespace AIProj
 {
-
+/*
   Tract::Tract (char C_STATE, int C_TRACT, int C_AREALAND, int C_POP100, int C_H001001, int C_H002001, int C_H002005, int C_H003001, int C_H003002, int C_H003003, int C_P001001, int C_P002001, int C_P002002, int C_P002005, int C_P003001, int C_P003002, int C_P003003, int C_P003004, int C_P003005, int C_P003006, int C_P003007, int C_P003008, int C_P003009, int C_P003010, int C_P003026, int C_P003047, int C_P003063, int C_P003070, int C_P004001, int C_P004002, int C_P004003, int C_P012001, int C_P012002, int C_P012026, int C_P012A001, int C_P012A002, int C_P012A026, int C_P012B001, int C_P012B002, int C_P012B026, int C_P012C001, int C_P012C002, int C_P012C026, int C_P012D001, int C_P012D002, int C_P012D026, int C_P012E001, int C_P012E002, int C_P012E026, int C_P012F001, int C_P012F002, int C_P012F026, int C_P012G001, int C_P012G002, int C_P012G026, int C_P012H001, int C_P012H002, int C_P012H026, int C_P012I001, int C_P012I002, int C_P012I026, int C_P013001, int C_P013A001, int C_P013B001, int C_P013C001, int C_P013D001, int C_P013E001, int C_P013F001, int C_P013G001, int C_P013H001, int C_P013I001)
   {
     // TODO Auto-generated constructor stub
@@ -83,21 +83,12 @@ namespace AIProj
     _P013G001 = C_P013G001;
     _P013H001 = C_P013H001;
     _P013I001 = C_P013I001;
-
-  }
+  }*/
 
   Tract::~Tract ()
   {
     // TODO Auto-generated destructor stub
   }
-
-  void Tract::set_neighbors(int t[]){
-    _neighbors = vector<int>(t,t+sizeof(t)/sizeof(int));
-  }
-
-  int Tract::get_neighbor(int t){
-    return _neighbors.at(t);
-  } 
 
   char Tract::get_STATE(){
 		return _STATE;

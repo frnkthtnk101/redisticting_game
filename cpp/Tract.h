@@ -123,8 +123,6 @@ namespace AIProj
     int get_P013G001();
     int get_P013H001();
     int get_P013I001();
-    void set_neighbors(int[]);
-    int get_neighbor(int);
 //---------------------------------------------------
 
     const tractId& getId() const { return tractId_; } ;

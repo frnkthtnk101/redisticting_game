@@ -41,7 +41,6 @@ namespace AIProj
      */
     const std::shared_ptr< std::set< std::shared_ptr<Tract> > > getAvailableTracts(const districtId& dId) const;
 
-
     /**
      * @brief A list of all unused tracts
      * @return
@@ -57,6 +56,8 @@ namespace AIProj
     void setUsedTract(const tractId& trId, const districtId& dId );
 
     void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->getId()] = dst; };
+
+    void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->]
 
 
   private:

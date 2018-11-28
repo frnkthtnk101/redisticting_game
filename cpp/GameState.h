@@ -7,6 +7,8 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 
+#include <set>
+#include <utility>
 #include <vector>
 
 #include "District.h"
@@ -32,20 +34,20 @@ namespace AIProj
      * @brief Retrieves all unused tracts
      * @return
      */
-    const std::vector<const Tract*>* getAvailableTracts() const;
+    std::shared_ptr< std::set<const std::shared_ptr<Tract> > > getAvailableTracts() const;
 
     /**
      * @brief Retrieves all tracts adjacent to the given District
      * @param dId [in] The District to get adjacent to
      * @return
      */
-    const std::vector<const Tract*>* getAvailableTracts(const districtId& dId);
+    std::shared_ptr< std::set<const std::shared_ptr<Tract> > > getAvailableTracts(const districtId& dId);
 
     /**
      * @brief A list of all unused tracts
      * @return
      */
-    const std::vector<const Tract*>* getUnavailableTracts() const;
+    std::shared_ptr< std::set<const std::shared_ptr<Tract> > > getUnavailableTracts() const;
 
     /**
      * @brief Designate a tract as being used by a district
@@ -55,15 +57,95 @@ namespace AIProj
      */
     bool setUsedTract(const tractId& trId, const districtId& dId );
 
+    void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->]
+
 
   private:
+
+    std::shared_ptr< std::vector<const std::shared_ptr<Tract> > > getTractsFromSet(const std::vector<tractId> &tractVec) const;
+
     size_t targetDistrictSize_;
 
-    std::map<districtId, std::vector<tractId> > usedTractMap_;
-    std::vector<tractId> usedTractList_;
+    std::map<districtId, std::shared_ptr<District> > districtMap_;
+    std::map<districtId, std::set<tractId> > usedTractMap_;
+    std::map<tractId, std::shared_ptr<Tract> > tractMap_;
+    std::set<tractId> unusedTractList_;
+    std::set<tractId> usedTractList_;
 
   };
 
 } /* namespace AIProj */
+
+inline void AIProj::GameState::initializeGameStateFromDB(std::string dbRef)
+{
+	//Create Tract Objects
+}
+
+inline std::shared_ptr< std::set<const std::shared_ptr<Tract> > > AIProj::GameState::getAvailableTracts() const
+{
+	return getTractsFromVector(unusedTractList_);
+}
+
+inline std::shared_ptr< std::set<const std::shared_ptr<Tract> > > AIProj::GameState::getUnavailableTracts() const
+{
+	return getTractsFromVector(usedTractList_);
+}
+
+inline std::shared_ptr< std::set<const std::shared_ptr<Tract> > > AIProj::GameState::getTractsFromSet(const std::vector<tractId> &tractVec) const
+{
+	auto rValue = std::make_shared< std::set<const std::shared_ptr<Tract> > >();
+
+	//Retrieve the actual tracts off of the tract map and add them to the vector
+	for( auto trct : tractVec )
+	{
+		rValue->push_back(tractMap_[trct]);
+	}
+
+	return rValue;
+}
+
+inline std::shared_ptr< std::set<const std::shared_ptr<Tract> > > AIProj::GameState::getAvailableTracts(
+		const districtId& dId) const
+{
+	//Get all available tracts
+	auto rValue = getAvailableTracts();
+
+	//----------------------------------------
+	//Remove the non-adjacent Tracts
+	//----------------------------------------
+	//Build tractId adjacency set
+	std::set<const std::shared_ptr<Tract> > adjacencySet;
+	for(auto trctSetItr : districtMap_[dId].getTracts())
+	{
+		const std::set<tractId> &neighbors = (tractMap_[*tractSetItr])->getNeighbors();
+		adjacencySet.insert(neighbors.begin(), neighbors.end() );
+	}
+
+	//Remove from the available list any tract that isn't in the adjacency set
+	for( auto trctItr = rValue->begin(); trctItr != rValue->end(); )
+	{
+		if(adjacencySet.find(*tractItr) )
+			trctItr++;
+		else
+			trctItr = rValue->erase(trctItr);
+	}
+
+	return rValue;
+}
+
+inline bool AIProj::GameState::setUsedTract(const tractId& trId,
+		const districtId& dId)
+{
+	//Add the tract to the used lists
+	usedTractMap_[dId].push_back(trId);
+	usedTractList_.push_back(trId);
+
+	//Remove it from the unused list
+	unusedTractList_.erase(std::remove(unusedTractList_.begin(),
+			                           unusedTractList_.end(),
+									   trId),
+			                unusedTractList_.end());
+}
+
 
 #endif /* GAMESTATE_H_ */

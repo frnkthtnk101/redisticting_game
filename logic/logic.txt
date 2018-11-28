@@ -24,7 +24,8 @@ in PA. They dont do the other stuff.
 
 Logic
 
-
+CONSTANT SIMILARITY_LIMIT = 55;
+CONSTANT POP_CEILING = 334,000;
     
 
 bool District::take_turn(){
@@ -43,7 +44,7 @@ bool District::take_turn(){
         }
     }
     if(index != 0 and Highest!= 0){
-        District::append_to_ownedTracts_(0,list-Aviable-Moves[Index])
+        District::addTract(0,list-Aviable-Moves[Index])
     }
     else
     {
@@ -65,9 +66,30 @@ int District::calculate_choice(int voice, Tract* tract){
     return voice
 }
 
-bool District::similar(Tract* tract){} 
+bool District::similar(Tract* tract){
+    disimilarity = 0 ;
+    Tract_index = -1
+    foreach metric in District:metricTotals_{
+        if SIMILARITY_LIMIT > disimilarity{
+            Tract_index++
+            if metric ≅ District:metricTotals_[Tract_index)
+            {
+                continue
+            }
+            else{
+                disimilarity++;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+    return True;
+} 
 
-bool District::no_racial_bias(Tract* tract){}
+bool District::no_racial_bias(Tract* tract){
+    PA is white. I dont think PA really takes this into consideration..
+}
 
 
 *If you read the book 'The big sort, why the clustering

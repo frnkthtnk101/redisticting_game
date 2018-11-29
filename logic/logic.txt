@@ -23,9 +23,20 @@ PA is mostly white.
 in PA. They dont do the other stuff.
 
 Logic
+some things to mention 
+any time im talking about list, it can be either set or list.
+------
+
+the game state keeps tract of whos turn it is. When its N districs turn,
+the District::take_turn is called. it returns a bool, true if it made its
+move and false it can make no more moves.
+what take_turn is doing
+
+
+puesdo code.
 
 CONSTANT SIMILARITY_LIMIT = 55;
-CONSTANT POP_CEILING = 334,000;
+CONSTANT POP_CEILING = 646,300;
     
 
 bool District::take_turn(){

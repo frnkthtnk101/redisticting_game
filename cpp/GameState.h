@@ -113,7 +113,6 @@ inline const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > AIPro
 
 	for(auto trctSetItr : (districtMap_[dId])->getTracts())
 	{
-
 		const std::set<tractId> &neighbors = trctSetItr->getNeighbors();
 
 		for( auto nItr : neighbors)

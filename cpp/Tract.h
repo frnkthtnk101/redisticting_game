@@ -28,6 +28,8 @@ namespace AIProj
 
     const tractId& getId() const { return tractId_; } ;
 
+    size_t getPopulation(void) const { return population_; };
+
     void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
     const std::set<tractId>& getNeighbors(void) const { return neighboringTracts_; };
 
@@ -35,6 +37,8 @@ namespace AIProj
     void addAttribute( const tractMetric&,size_t);
     bool hasAttribute(const tractMetric&) const;
     size_t getAttributeValue(const tractMetric&) const;
+
+    const std::map<tractMetric,size_t>& getAttributeMap(void) const { return attributeMap_; };
 
   private:
 

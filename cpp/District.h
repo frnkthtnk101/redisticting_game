@@ -46,11 +46,12 @@ namespace AIProj
     tractId makeTractDecision(const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > >);
 
     /**
-     * @brief Run the heuristics and see if we want this tract
-     * @param
-     * @return True if we want the tract
+     * @brief Run the heuristics and see how much we want this tract
+     * @param voice
+     * @param tct The tract being examined
+     * @return
      */
-    bool testTractForAdd(const Tract&);
+    void calculateChoice (int &voice, std::shared_ptr<AIProj::Tract> tct);
 
     /**
      * @brief Add the tract to our list & update our totals
@@ -75,11 +76,15 @@ namespace AIProj
 
   private:
 
+    bool similar(std::shared_ptr<AIProj::Tract>  tract);
+    bool noRacialBias(std::shared_ptr<AIProj::Tract> tract);
+
     static size_t idCounter_;
+    static size_t similarityLimit_;
+    static size_t targetPopulation_;
+
     size_t districtId_;
     size_t population_;
-
-    static size_t targetPopulation_;
 
     std::set<const Tract*> ownedTracts_;
     std::map<tractMetric, size_t> metricTotals_;

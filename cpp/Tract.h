@@ -23,12 +23,12 @@ namespace AIProj
   {
   public:
 
-    Tract (tractId, size_t, std::map<tractMetric,size_t>);
+    Tract (tractId, int, std::map<tractMetric,size_t>);
     virtual ~Tract ();
 
     const tractId& getId() const { return tractId_; } ;
 
-    size_t getPopulation(void) const { return population_; };
+    int getPopulation(void) const { return population_; };
 
     void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
     const std::set<tractId>& getNeighbors(void) const { return neighboringTracts_; };
@@ -43,7 +43,7 @@ namespace AIProj
   private:
 
     tractId tractId_;
-    size_t population_;
+    int population_;
     std::map<tractMetric,size_t> attributeMap_;
     std::set<tractId> neighboringTracts_;
   };

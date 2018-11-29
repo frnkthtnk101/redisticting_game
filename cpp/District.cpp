@@ -6,6 +6,9 @@
 
 #include "District.h"
 
+#include "GameState.h"
+
+#include <cstdlib>
 #include <map>
 #include <set>
 
@@ -13,8 +16,9 @@ namespace AIProj
 {
 
   size_t District::idCounter_ = 0;
-  size_t District::targetPopulation_ = 0;
+  int District::targetPopulation_ = 0;
   size_t District::similarityLimit_ = 55;
+  size_t District::tractChoiceDepth_ = 1;
 
   District::District ()
   : districtId_(idCounter_),
@@ -29,9 +33,12 @@ namespace AIProj
   }
 
 tractId
-District::makeTractDecision (
-    const std::shared_ptr<std::set<std::shared_ptr<AIProj::Tract> > > availableTracts)
+District::makeTractDecision (AIProj::GameState &gState )
 {
+  //Get Available Tracts
+  const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > availableTracts
+           = gState.getAvailableTracts(getId());
+
   //Create Value mapping
   std::map<std::shared_ptr<AIProj::Tract>, int> bestChoices;
 
@@ -42,7 +49,8 @@ District::makeTractDecision (
     {
       //Determine the tracts voice
       int voice = 0;
-      calculateChoice(voice, tct);
+      std::set<tractId> ignoreList;
+      calculateChoice(voice, tct, tractChoiceDepth_,gState,ignoreList);
 
       if(voice > bestVoice)
 	{
@@ -61,10 +69,14 @@ District::makeTractDecision (
 }
 
 void
-District::calculateChoice (int &voice, std::shared_ptr<AIProj::Tract> tct)
+District::calculateChoice (int &voice,
+			   std::shared_ptr<AIProj::Tract> tct,
+			   int depthToGo,
+			   AIProj::GameState &gState,
+			   std::set<tractId> &ignoreList)
 {
   //TODO: Populations of all districts must be within 10% of each other
-  if( (tct->getPopulation() + getCurrentPopulation() <= targetPopulation_)
+  if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
       && noRacialBias(tct) )
     {
       voice++; //???? Is this supposed to be here?
@@ -73,13 +85,18 @@ District::calculateChoice (int &voice, std::shared_ptr<AIProj::Tract> tct)
 	  voice++;
 	}
 
-      //????????????????
-      //TODO
-      //Why look at the adjacent tracts here?
-      //list-adjacent = District::get-track-boundry-tracks(tract)
-      //foreach ls_ad in list-adjacent{
-      //    voice = calculate_choice(voice, ls_ad)
-      //????????????????
+      //Make sure we don't reconsider this tract
+      ignoreList.insert(tct->getId());
+
+      //Get Available Tracts
+      const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > availableTracts
+               = gState.getAvailableTractsForATract(tct->getId(),ignoreList);
+
+      //Calculate each of their voice
+      for(auto tctItr : *availableTracts)
+	{
+	  calculateChoice(voice, tctItr, --depthToGo, gState,ignoreList);
+	}
     }
 }
 
@@ -104,7 +121,7 @@ District::similar(std::shared_ptr<AIProj::Tract>  tct)
     {
       if( similarityLimit_ > disimilarity)
 	{
-	  if(metric.second == metricTotals_.at(metric.first)) //??? Is equality the right thing here
+	  if(metric.second == metricTotals_.at(metric.first)) //TODO:?? Is equality the right thing here
 	    {
 	      continue;
 	    }

@@ -9,7 +9,7 @@
 namespace AIProj
 {
 
-  Tract::Tract (tractId tId, size_t pop, std::map<tractMetric, size_t> metricMap)
+  Tract::Tract (tractId tId, int pop, std::map<tractMetric, size_t> metricMap)
   :  tractId_(tId),
      population_(pop),
      attributeMap_(metricMap)

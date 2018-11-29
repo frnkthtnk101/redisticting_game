@@ -11,10 +11,13 @@
 #include <memory>
 #include <vector>
 
+//#include "GameState.h"
 #include "Tract.h"
 
 namespace AIProj
 {
+  class GameState;
+
   typedef size_t districtId;
 
   class District
@@ -29,7 +32,7 @@ namespace AIProj
      * @brief Retrieves the current district population
      * @return
      */
-    size_t getCurrentPopulation() const { return population_; };
+    int getCurrentPopulation() const { return population_; };
 
     /**
      * @brief Retrieves the Population total of the metric
@@ -43,15 +46,20 @@ namespace AIProj
      * @param The tract set
      * @return The ID of the added tract
      */
-    tractId makeTractDecision(const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > >);
+    tractId makeTractDecision(AIProj::GameState &gState);
 
     /**
      * @brief Run the heuristics and see how much we want this tract
      * @param voice
      * @param tct The tract being examined
+     * @param depthToGo How deep to go recursively
      * @return
      */
-    void calculateChoice (int &voice, std::shared_ptr<AIProj::Tract> tct);
+    void calculateChoice (int &voice,
+			  std::shared_ptr<AIProj::Tract> tct,
+			  int depthToGo,
+			  AIProj::GameState &gState,
+			  std::set<tractId> &ignoreList);
 
     /**
      * @brief Add the tract to our list & update our totals
@@ -69,7 +77,7 @@ namespace AIProj
      * @brief Get/Set for the static target population values
      * @return
      */
-    static size_t getTargetPopulation() { return targetPopulation_; };
+    static int getTargetPopulation() { return targetPopulation_; };
     static void setTargetPopulation(size_t tgtPop) { targetPopulation_  = tgtPop; };
 
     size_t getId() const { return districtId_; };
@@ -81,10 +89,11 @@ namespace AIProj
 
     static size_t idCounter_;
     static size_t similarityLimit_;
-    static size_t targetPopulation_;
+    static int targetPopulation_;
+    static size_t tractChoiceDepth_;
 
     size_t districtId_;
-    size_t population_;
+    int population_;
 
     std::set<const Tract*> ownedTracts_;
     std::map<tractMetric, size_t> metricTotals_;

@@ -79,14 +79,14 @@ District::calculateChoice (int &voice,
   if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
       && noRacialBias(tct) )
     {
-      voice++; //???? Is this supposed to be here?
+      voice++; //???? Is this supposed to be here? why yes it is
       if(similar(tct))
-	{
-	  voice++;
-	}
+	    {
+	      voice++;
+	    }
 
       //Make sure we don't reconsider this tract
-      ignoreList.insert(tct->getId());
+      ignoreList.insert(tct->getId()); //ok i like it. I think i know why you did this
 
       //Get Available Tracts
       const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > availableTracts
@@ -94,9 +94,9 @@ District::calculateChoice (int &voice,
 
       //Calculate each of their voice
       for(auto tctItr : *availableTracts)
-	{
-	  calculateChoice(voice, tctItr, --depthToGo, gState,ignoreList);
-	}
+      {
+        calculateChoice(voice, tctItr, --depthToGo, gState,ignoreList);
+      }
     }
 }
 
@@ -121,7 +121,10 @@ District::similar(std::shared_ptr<AIProj::Tract>  tct)
     {
       if( similarityLimit_ > disimilarity)
 	{
-	  if(metric.second == metricTotals_.at(metric.first)) //TODO:?? Is equality the right thing here
+    int mtf= metricTotals_.at(metric.first);
+    if(mtf - ( mtf * .1)<= metric.second && metric.second <= mtf + ( mtf * .1)) //??
+	  //if(metric.second == metricTotals_.at(metric.first)) //TODO:?? Is equality the right thing here 
+    ///I aggree with you maybe a 10% range both ways. 
 	    {
 	      continue;
 	    }

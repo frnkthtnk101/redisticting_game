@@ -35,8 +35,8 @@ what take_turn is doing
 
 puesdo code.
 
-CONSTANT SIMILARITY_LIMIT = 55;
-CONSTANT POP_CEILING = 646,300;
+CONSTANT SIMILARITY_LIMIT = 55; 
+CONSTANT POP_CEILING = 646,300; state population / 19
     
 
 bool District::take_turn(){

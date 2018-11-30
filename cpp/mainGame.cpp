@@ -28,12 +28,8 @@ int main(int argc, char *argv[])
       //Cycle through the districts
       for(auto dist : districts)
 	{
-	  //Get Available Tracts
-	  const std::shared_ptr< std::set< std::shared_ptr<AIProj::Tract> > > tracts
-	           = gState.getAvailableTracts(dist->getId());
-
 	  //Make Decision
-	  AIProj::tractId tctId = dist->makeTractDecision(tracts);
+	  AIProj::tractId tctId = dist->makeTractDecision(gState);
 
 	  //Commit to Tract
 	  gState.setUsedTract(tctId,dist->getId());

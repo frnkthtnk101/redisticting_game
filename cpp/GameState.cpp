@@ -4,6 +4,9 @@
  *      Author: scarbors
  */
 
+//#include <cmath>
+#include <Python.h>
+
 #include "GameState.h"
 #include "Tract.h"
 

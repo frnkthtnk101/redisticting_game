@@ -5,11 +5,25 @@
  *      Author: ShadRS
  */
 
+#include <Python.h>
+
 #include "District.h"
 #include "GameState.h"
 
 int main(int argc, char *argv[])
 {
+  //----------------------
+  //Python Test
+
+  Py_Initialize();
+  PyRun_SimpleString("import sys; sys.path.append('.')");
+  PyRun_SimpleString("import mytest;");
+  PyRun_SimpleString("print mytest.myabs(2.0)");
+  Py_Finalize();
+
+  return 0;
+  //----------------------
+
   //Create GameState object
   AIProj::GameState gState;
 

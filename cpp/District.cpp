@@ -76,14 +76,15 @@ District::calculateChoice (int &voice,
 			   std::set<tractId> &ignoreList)
 {
   //TODO: Populations of all districts must be within 10% of each other
-  if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
+  //if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
+  if( targetPopulation_> (tct->getPopulation() + getCurrentPopulation())
       && noRacialBias(tct) )
     {
       voice++; //???? Is this supposed to be here? why yes it is
       if(similar(tct))
-	    {
-	      voice++;
-	    }
+	{
+	  voice++;
+	}
 
       //Make sure we don't reconsider this tract
       ignoreList.insert(tct->getId()); //ok i like it. I think i know why you did this
@@ -110,10 +111,6 @@ bool District::noRacialBias(std::shared_ptr<AIProj::Tract> tract)
 bool
 District::similar(std::shared_ptr<AIProj::Tract>  tct)
 {
-  //TODO
-//  disimilarity = 0 ;
-//  Tract_index = -1
-
   size_t disimilarity = 0;
   auto tctMetrics = tct->getAttributeMap();
 

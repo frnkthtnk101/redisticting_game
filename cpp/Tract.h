@@ -15,7 +15,7 @@ using namespace std;
 
 namespace AIProj
 {
-  typedef std::pair<size_t,size_t> tractId; //County Id, Tract Id
+  typedef size_t tractId; //fid
   typedef std::string tractMetric;
 
 
@@ -31,20 +31,24 @@ namespace AIProj
     int getPopulation(void) const { return population_; };
 
     void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
+    void addNeighbor(tractId nghbor) { if(nghbor != tractId_ ) neighboringTracts_.insert(nghbor); } ;
     const std::set<tractId>& getNeighbors(void) const { return neighboringTracts_; };
 
-    void addAttributes(std::vector<std::pair<tractMetric,size_t> >);
-    void addAttribute( const tractMetric&,size_t);
+    //void addAttributes(std::vector<std::pair<tractMetric,size_t> >);
+    //void addAttribute( const tractMetric&,size_t);
     bool hasAttribute(const tractMetric&) const;
     size_t getAttributeValue(const tractMetric&) const;
+    double getAttributeFraction(const tractMetric&) const;
 
     const std::map<tractMetric,size_t>& getAttributeMap(void) const { return attributeMap_; };
+    const std::map<tractMetric,double>& getAttributeFractionMap(void) const { return attributeFraction_; };
 
   private:
 
     tractId tractId_;
     int population_;
     std::map<tractMetric,size_t> attributeMap_;
+    std::map<tractMetric,double> attributeFraction_;
     std::set<tractId> neighboringTracts_;
   };
 

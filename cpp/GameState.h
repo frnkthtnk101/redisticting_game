@@ -7,6 +7,7 @@
 #ifndef GAMESTATE_H_
 #define GAMESTATE_H_
 
+#include <iostream>
 #include <set>
 #include <memory>
 
@@ -24,9 +25,10 @@ namespace AIProj
 
     /**
      * @brief retrieves the population record and calculates the target district size
-     * @param dbRef
+     * @param tractFile
+     * @param adjacencyFile
      */
-    void initializeGameStateFromDB(std::string dbRef);
+    void initializeGameStateFromFile(std::string tractFile, std::string adjacencyFile, size_t dCount);
 
     /**
      * @brief Retrieves all unused tracts
@@ -67,6 +69,10 @@ namespace AIProj
      * @param dst
      */
     void addDistrict(std::shared_ptr<District> dst) { districtMap_[dst->getId()] = dst; };
+
+    size_t getTargetDistrictSize( void ) const { return targetDistrictSize_; };
+
+    std::shared_ptr<Tract> getTract(tractId tId) { return tractMap_[tId]; };
 
   private:
 
@@ -152,6 +158,12 @@ AIProj::GameState::getAvailableTractsForATract(const tractId& tctId, std::set<tr
   //----------------------------------------
   //Build tractId adjacency set
   std::set<std::shared_ptr<Tract> > adjacencySet;
+
+  if(tractMap_.find(tctId) == tractMap_.end())
+    {
+      std::cout << "Failed to find!!\n" << std::flush;
+	exit(EXIT_FAILURE);
+    }
 
   const std::set<tractId> &neighbors = tractMap_.at(tctId)->getNeighbors();
 

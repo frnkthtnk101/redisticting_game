@@ -1,6 +1,20 @@
-DistrictId,tractFid
-1,15495
-2,13957
-3,15430
-4,14416
-5,15102
+DistrictId,tractFid,County,Tract,County Code
+1,12473,Philadelphia,27,101
+2,12114,Bucks,1047.02,17
+3,14606,Philadelphia,108,101
+4,12916,Allegheny,4120.01,3
+5,12023,Elk,9905,47
+6,13133,Berks,118,11
+7,11626,Delaware,4099.03,45
+8,15134,Bucks,1057.04,17
+9,12494,Bedford,9807,9
+10,15320,Susquehanna,323,115
+11,14688,Lackawanna,1026,69
+12,14993,Fayette,2612,51
+13,13561,Montgomery,2009.02,91
+14,15282,Allegheny,1807,3
+15,13350,Lehigh,10,77
+16,13063,Lancaster,1,71
+17,13668,Dauphin,222,43
+18,14014,Washington,7127,125
+19,12243,Adams,315.02,1

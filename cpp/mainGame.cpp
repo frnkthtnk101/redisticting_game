@@ -27,7 +27,7 @@ void printDistricts(std::vector<std::shared_ptr<AIProj::District>> &districts, A
       auto tracts = gState.getAvailableTracts();
       for(auto tct : *tracts)
 	{
-	  fout << "-," //Not assigned a district
+	  fout << "-" //Not assigned a district
 	      << "," << tct->getCountyId()
 	      << "," << tct->getFullTract()
 	      << "," << tct->getId()

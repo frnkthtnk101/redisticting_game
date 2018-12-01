@@ -121,7 +121,7 @@ namespace AIProj
 	  }
 
 	//Create Tract Objects
-	std::shared_ptr<Tract> nTract(new Tract(fid,county,tract*100.0,pop,metricMap));
+	std::shared_ptr<Tract> nTract(new Tract(fid,county,tract,pop,metricMap));
 
 	//Add the tract to our lists
 	tractId tId = nTract->getId();

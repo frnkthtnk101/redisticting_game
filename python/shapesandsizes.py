@@ -1,5 +1,6 @@
 #https://chrishavlin.com/2016/11/16/shapefiles-tutorial/
 #https://gis.stackexchange.com/questions/131716/plot-shapefile-with-matplotlib
+#https://stackoverflow.com/questions/30447790/displaying-a-shapefile/48056459#48056459
 import shapefile
 import numpy as np
 from matplotlib import pyplot as plt
@@ -8,16 +9,29 @@ sf = shapefile.Reader('/Users/francopettigrosso/ws/redisticting_game/python/shap
 #first feature of the shapefile
 print(f'number of shapes imported:{len(sf.shapes())}')
 
+
 plt.figure()
-ax = plt.axes() # add the axes
-ax.set_aspect('equal')
-ax.shapes.color = 'black'
 t =plt.gca()
-t.add_patch(PolygonPatch(poly, fc=BLUE, ec=BLUE, alpha=0.5, zorder=2 ))
+i =1
 for shape in list(sf.iterShapes()):
     npoints = len(shape.points)
     nparts = len(shape.parts)
-
+    poly = shape.__geo_interface__
+    if i % 6 == 0:
+        color = '#663300'
+    elif i %5 == 0:
+        color = '#663300'
+    elif i %4 == 0:
+        color = '#663300'
+    elif i %3 == 0:
+        color = '#cc0066'
+    elif i %2 == 0:
+        color = '#cc0066'
+    else:
+        color = '#cc0066'
+    i+=1
+    t.add_patch(PolygonPatch(poly, facecolor=[0,0,0.5],edgecolor=[0,0,0], alpha=0.7, zorder=2))
+    t.axis('equal')
     if nparts == 1:
         x_lon = np.zeros((len(shape.points),1))
         y_lat = np.zeros((len(shape.points),1))
@@ -39,5 +53,5 @@ for shape in list(sf.iterShapes()):
                 x_lon[ip] = seg[ip][0]
                 y_lat[ip] = seg[ip][1]
 
-        plt.plot(x_lon,y_lat,color = 'r')
+        plt.plot(x_lon,y_lat)
 plt.show()

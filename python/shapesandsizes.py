@@ -55,14 +55,16 @@ i = 0
 for shaperec in list(sf.iterShapeRecords()):
     shape = shaperec.shape
     rec = shaperec.record
-    print(f"state: {rec[4]} county: {rec[5]} tract: {rec[6]} Name: {rec[7]}")
+    row = ([i for i in tract_info if int(i['county']) == rec[5] and int(i['tract']) == rec[6] ])
+    color= colors[int((row[i]['Districtnum']).replace('-',-1)]
+    print(f"TR42_D00: {rec[3]} TR42_D00_I {rec[4]} state: {rec[4]} county: {rec[5]} tract: {rec[6]} Name: {rec[7]}")
     nparts = len(shape.parts)
     if nparts == 1:
         polygon = Polygon(shape.points)
-        patch = PolygonPatch(polygon,facecolor=colors[i],alpha=1,zorder=1)
+        patch = PolygonPatch(polygon,facecolor=color,alpha=1,zorder=1)
         patch.set_linewidth(None)
         #patch.set_edgecolor('none')
-        patch.set_edgecolor(colors[i])
+        patch.set_edgecolor(color)
         ax.add_patch(patch)
     else:
         for ip in range(nparts):
@@ -72,10 +74,10 @@ for shaperec in list(sf.iterShapeRecords()):
             else:
                 i1 = len(shape.points)
             polygon = Polygon(shape.points[i0:i1+1])
-            patch = PolygonPatch(polygon,facecolor=colors[i],alpha = 1 , zorder = 1)
+            patch = PolygonPatch(polygon,facecolor=color,alpha = 1 , zorder = 1)
             patch.set_linewidth(None)
             #patch.set_edgecolor('none')
-            patch.set_edgecolor(colors[i])
+            patch.set_edgecolor(color)
             ax.add_patch(patch)
     if (i < 18):
         i+= 1

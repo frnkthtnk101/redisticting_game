@@ -8,6 +8,7 @@ import csv
 from matplotlib import pyplot as plt
 from descartes import PolygonPatch
 from shapely.geometry import Polygon
+
 sf = shapefile.Reader('/Users/francopettigrosso/ws/redisticting_game/python/shapefiles/tr42_d00')
 #first feature of the shapefile
 tract_info = []
@@ -36,7 +37,8 @@ colors = [
     '#ff01fb',
     '#ff0901',
     '#01fbff',
-    '#01ff09'
+    '#01ff09',
+    '#000000'
 
 ]
 
@@ -55,9 +57,18 @@ i = 0
 for shaperec in list(sf.iterShapeRecords()):
     shape = shaperec.shape
     rec = shaperec.record
-    row = ([i for i in tract_info if int(i['county']) == rec[5] and int(i['tract']) == rec[6] ])
-    color= colors[int((row[i]['Districtnum']).replace('-',-1)]
+    #print(rec['STATE'])
     print(f"TR42_D00: {rec[3]} TR42_D00_I {rec[4]} state: {rec[4]} county: {rec[5]} tract: {rec[6]} Name: {rec[7]}")
+    number = -1
+    for dist_row in tract_info:
+        if int(dist_row['county']) == int(rec['COUNTY']) and int(dist_row['tract']) == int(rec['TRACT']):
+            number = int(dist_row['Districtnum'].replace('-','-1'))
+            if number == -1:
+                i += 1
+            print(dist_row)
+            break 
+    
+    color= colors[number]
     nparts = len(shape.parts)
     if nparts == 1:
         polygon = Polygon(shape.points)
@@ -79,13 +90,9 @@ for shaperec in list(sf.iterShapeRecords()):
             #patch.set_edgecolor('none')
             patch.set_edgecolor(color)
             ax.add_patch(patch)
-    if (i < 18):
-        i+= 1
-    else:
-        i=0
 
 
-
+print(i)
 plt.xlim(-81,-74.5)
 plt.ylim(39.7,42.5)
 plt.show()

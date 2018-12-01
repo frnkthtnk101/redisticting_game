@@ -17,7 +17,14 @@ namespace AIProj
     //Initialize the attribute fractions
     for(auto metric : attributeMap_)
       {
-	attributeFraction_[metric.first] = double(metric.second)/double(pop);
+	if(pop == 0)
+	  {
+	    attributeFraction_[metric.first] = 0;
+	  }
+	else
+	  {
+	    attributeFraction_[metric.first] = double(metric.second)/double(pop);
+	  }
       }
 
   }

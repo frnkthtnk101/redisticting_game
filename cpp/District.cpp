@@ -49,6 +49,10 @@ District::makeTractDecision (AIProj::GameState &gState )
 
   for(auto tct :*availableTracts)
     {
+      //????????????
+//      std::cout << "   Start Tract " << tct->getId()
+//	  << std::endl << std::flush;
+      //????????????
       //Determine the tracts voice
       int voice = 0;
       std::set<tractId> ignoreList;
@@ -59,6 +63,10 @@ District::makeTractDecision (AIProj::GameState &gState )
 	 bestVoice = voice;
 	 bestTract = tct;
 	}
+      //????????????
+//      std::cout << "   -->End Tract " << tct->getId()
+//	  << std::endl << std::flush;
+      //????????????
     }
 
   //Select the best tract
@@ -80,7 +88,7 @@ District::calculateChoice (int &voice,
 			   std::set<tractId> &ignoreList)
 {
   //if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
-  if( targetPopulation_> (tct->getPopulation() + getCurrentPopulation())
+  if( targetPopulation_> (tct->getPopulation() + population_)
       && noRacialBias(tct) )
     {
       voice++; //???? Is this supposed to be here? why yes it is

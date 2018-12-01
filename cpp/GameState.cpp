@@ -18,7 +18,9 @@ namespace AIProj
 {
 
   GameState::GameState ()
-  :  targetDistrictSize_ (0)
+  :  targetDistrictSize_ (0),
+     unusedTractList_(new std::set<std::shared_ptr<AIProj::Tract> >() ),
+     usedTractList_(new std::set<std::shared_ptr<AIProj::Tract> >() )
   {
 
   }
@@ -122,7 +124,7 @@ namespace AIProj
 
 	//Add the tract to our lists
 	tractId tId = nTract->getId();
-	unusedTractList_.insert(tId);
+	unusedTractList_->insert(nTract);
 	tractMap_[tId] = nTract;
 
 	//Keep track of the population
@@ -148,7 +150,7 @@ namespace AIProj
 	if( (tractMap_.find(fid) != tractMap_.end())
 	    && (tractMap_.find(nid) != tractMap_.end())) //Only include adjacensies from this state
 	  {
-	    (tractMap_[fid])->addNeighbor(nid);
+	    (tractMap_[fid])->addNeighbor(tractMap_[nid]);
 	  }
       }
 

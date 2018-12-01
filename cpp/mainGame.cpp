@@ -5,13 +5,14 @@
  *      Author: ShadRS
  */
 
+#include <chrono>
 #include <iostream>
+
 #include "District.h"
 #include "GameState.h"
 
 int main(int argc, char *argv[])
 {
-
   //Create GameState object
   AIProj::GameState gState;
 
@@ -52,6 +53,8 @@ int main(int argc, char *argv[])
   size_t moves = 0;
   while( gState.getAvailableTracts()->size() && movesMade )
     {
+      // Get starting timepoint
+      auto start = std::chrono::high_resolution_clock::now();
       moves++;
       std::cout << "Playing round " << moves
 	  << ", Remaining tracts: " << gState.getAvailableTracts()->size()
@@ -78,6 +81,14 @@ int main(int argc, char *argv[])
 	      movesMade = true;
 	    }
 	}
+
+      // Get ending timepoint
+      auto stop = std::chrono::high_resolution_clock::now();
+
+      // use duration cast method
+      auto duration = std::chrono::duration_cast<std::chrono::minutes>(stop - start);
+      std::cout << "Elapsed time: "
+	  << duration.count() << std::endl << std::flush;
     }
 
   if( !movesMade )

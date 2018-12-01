@@ -121,10 +121,19 @@ namespace AIProj
     if(metricTotals_.size() == 0)
       {
 	population_ = trct->getPopulation();
+
 	for(auto metric : tctMetrics)
 	  {
 	    metricTotals_[metric.first] = metric.second;
-	    metricFractions_[metric.first] = double(metricTotals_[metric.first]) / double(population_);
+
+	    if(population_ == 0)
+	      {
+		metricFractions_[metric.first] = double(metricTotals_[metric.first]);
+	      }
+	    else
+	      {
+		metricFractions_[metric.first] = double(metricTotals_[metric.first]) / double(population_);
+	      }
 	  }
       }
     else

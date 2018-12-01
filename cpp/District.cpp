@@ -10,6 +10,7 @@
 
 #include <cstring>
 #include <cstdlib>
+#include <cmath>
 #include <map>
 #include <set>
 #include <fstream>
@@ -44,8 +45,17 @@ District::makeTractDecision (AIProj::GameState &gState )
   //Create Value mapping
   std::map<std::shared_ptr<AIProj::Tract>, int> bestChoices;
 
+  //The best
   int bestVoice = 0;
+  double bestCohesion = 0.0;
   std::shared_ptr<AIProj::Tract> bestTract;
+
+  //The weighted best
+  int wBestVoice = 0;
+  double wBestCohesion = 0.0;
+  double weight = 0.0;
+  std::shared_ptr<AIProj::Tract> wBestTract;
+
 
   for(auto tct :*availableTracts)
     {
@@ -57,12 +67,27 @@ District::makeTractDecision (AIProj::GameState &gState )
       int voice = 0;
       std::set<tractId> ignoreList;
       calculateChoice(voice, tct, tractChoiceDepth_,gState,ignoreList);
+      double cohesion = tct->getCohesionValue(districtId_);
 
-      if(voice > bestVoice)
+      //Test for best case
+      if( (voice > bestVoice)
+	  && (cohesion > bestCohesion ))
 	{
 	 bestVoice = voice;
 	 bestTract = tct;
+	 bestCohesion = cohesion;
 	}
+
+      //Test for weighted best
+      double newWeight = double(voice) * cohesion;
+      if( newWeight > weight)
+	{
+	 wBestVoice = voice;
+	 wBestTract = tct;
+	 wBestCohesion = cohesion;
+	 weight = newWeight;
+	}
+
       //????????????
 //      std::cout << "   -->End Tract " << tct->getId()
 //	  << std::endl << std::flush;
@@ -71,12 +96,20 @@ District::makeTractDecision (AIProj::GameState &gState )
 
   //Select the best tract
   tractId rValue = 0;
-  if(bestTract)
+  if(bestTract || wBestTract)
     {
-      rValue = bestTract->getId();
-
-      addTract(bestTract);
+      double newWeight = double(bestVoice) * bestCohesion;
+      std::shared_ptr<AIProj::Tract> finalBest = decideOnBestTract(bestTract,
+								    bestVoice,
+								    bestCohesion,
+								    newWeight,
+								    wBestTract,
+								    wBestVoice,
+								    wBestCohesion,
+								    weight);
+      rValue = finalBest->getId();
     }
+
   return rValue;
 }
 
@@ -191,6 +224,75 @@ District::createDistricts (std::string starterFile, std::vector<std::shared_ptr<
 
   return alignmentMap;
 }
+
+void
+District::dump (std::ofstream& fout)
+{
+    for(auto tct : ownedTracts_)
+      {
+	fout << districtId_
+	    << "," << tct->getCountyId()
+	    << "," << tct->getFullTract()
+	    << "," << tct->getId()
+	    << std::endl;
+      }
+}
+
+std::shared_ptr<Tract>
+District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
+			    int &bestVoice,
+			    double &bestCohesion,
+			    double &bestWeight,
+			    std::shared_ptr<Tract> &bestWeightT,
+			    int &wBestVoice,
+			    double &wBestCohesion,
+			    double &wBestWeight)
+{
+  std::shared_ptr<Tract> finalBest;
+
+  if(bestVoiceT && bestWeightT)
+    {
+      //If they're the same, easy
+      if(bestVoiceT == bestWeightT )
+	{
+	  finalBest = bestVoiceT;
+	  addTract(bestVoiceT);
+	}
+      //Need to actually decide between them
+      else
+	{
+	  double bestWeight = double(bestVoice) * bestCohesion;
+
+	  //If they'e close in weight, go with the one most reflective of the tract
+	  if( std::abs(bestWeight-wBestWeight) > 0.10)
+	    {
+	      finalBest = bestVoiceT;
+	      addTract(bestVoiceT);
+	    }
+	  else //Go with the most cohesive
+	    {
+	      finalBest = bestWeightT;
+	      addTract(bestWeightT);
+	    }
+	}
+
+    }
+  //If only one exists, go with that
+  else if(bestVoiceT)
+    {
+      finalBest = bestVoiceT;
+      addTract(bestVoiceT);
+    }
+  else if(bestWeightT)//Go with the most cohesive
+    {
+      finalBest = bestWeightT;
+      addTract(bestWeightT);
+    }
+
+  return finalBest;
+}
+
+
 
 } /* namespace AIProj */
 

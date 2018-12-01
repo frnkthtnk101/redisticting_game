@@ -82,8 +82,9 @@ namespace AIProj
       {
 	//Read in the elements
 	std::stringstream line(temp);
-	int state = -1,tract = -1,county = -1,arealand = -1, pop = -1;
-	size_t fid, metric;
+	int state = -1,arealand = -1, pop = -1;
+	double tract;
+	size_t fid, county, metric;
 	std::string gisjoin = "";
 	std::vector<int> metricValues;
 
@@ -120,7 +121,7 @@ namespace AIProj
 	  }
 
 	//Create Tract Objects
-	std::shared_ptr<Tract> nTract(new Tract(fid,pop,metricMap));
+	std::shared_ptr<Tract> nTract(new Tract(fid,county,tract*100.0,pop,metricMap));
 
 	//Add the tract to our lists
 	tractId tId = nTract->getId();

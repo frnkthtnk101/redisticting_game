@@ -24,7 +24,7 @@ namespace AIProj
   {
   public:
 
-    Tract (tractId, int, std::map<tractMetric,size_t>);
+    Tract (tractId, size_t,size_t, int, std::map<tractMetric,size_t>);
     virtual ~Tract ();
 
     const tractId& getId() const { return tractId_; } ;
@@ -45,9 +45,21 @@ namespace AIProj
     const std::map<tractMetric,size_t>& getAttributeMap(void) const { return attributeMap_; };
     const std::map<tractMetric,double>& getAttributeFractionMap(void) const { return attributeFraction_; };
 
+    void setDistrictId(const size_t &did) { districtId_ = did; };
+    size_t getDistrictId( void ) const { return districtId_; };
+
+    double getCohesionValue( const size_t &did) const;
+
+    size_t getCountyId(void) const { return countyId_; };
+
+    size_t getFullTract(void) const { return fullTract_; };
+
   private:
 
     tractId tractId_;
+    size_t districtId_;
+    size_t countyId_;
+    size_t fullTract_;
     int population_;
     std::map<tractMetric,size_t> attributeMap_;
     std::map<tractMetric,double> attributeFraction_;

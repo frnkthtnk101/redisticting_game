@@ -74,7 +74,7 @@ namespace AIProj
      * @return if the add was successful
      */
     void addTract(std::shared_ptr<AIProj::Tract> trct) ;
-    void addFirstTract(std::shared_ptr<AIProj::Tract> trct) ;
+    //void addFirstTract(std::shared_ptr<AIProj::Tract> trct) ;
 
     /**
      * @brief Retrieves the tracts already owned by this district
@@ -90,10 +90,20 @@ namespace AIProj
 
     size_t getId() const { return districtId_; };
 
+    void dump(std::ofstream &fout);
   private:
 
     bool similar(std::shared_ptr<AIProj::Tract>  tract);
     bool noRacialBias(std::shared_ptr<AIProj::Tract> tract);
+
+    std::shared_ptr<Tract> decideOnBestTract (std::shared_ptr<Tract> &bestVoiceT,
+    			    int &bestVoice,
+    			    double &bestCohesion,
+    			    double &bestWeight,
+    			    std::shared_ptr<Tract> &bestCohesionT,
+    			    int &wBestVoice,
+    			    double &wBestCohesion,
+    			    double &wBestWeight);
 
     static size_t similarityLimit_;
     static int targetPopulation_;
@@ -116,6 +126,9 @@ namespace AIProj
   {
     ownedTracts_.insert(trct);
     auto tctMetrics = trct->getAttributeMap();
+
+    //Set the district id on the tract
+    trct->setDistrictId(districtId_);
 
     //If this is the first time we're running this we need to initialize the totals
     if(metricTotals_.size() == 0)

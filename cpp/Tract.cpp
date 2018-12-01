@@ -8,9 +8,11 @@
 
 namespace AIProj
 {
-
-  Tract::Tract (tractId tId, int pop, std::map<tractMetric, size_t> metricMap)
+  Tract::Tract (tractId tId, size_t countyId, size_t tract, int pop, std::map<tractMetric, size_t> metricMap)
   :  tractId_(tId),
+     districtId_(0),
+     countyId_(countyId),
+     fullTract_(tract),
      population_(pop),
      attributeMap_(metricMap)
   {
@@ -145,4 +147,19 @@ namespace AIProj
 
   }
 
+  double
+  Tract::getCohesionValue (const size_t& did) const
+  {
+    int cohesion = 0;
+    for (auto nghbr : neighboringTracts_ )
+      {
+	if(nghbr->districtId_ == did)
+	  {
+	    cohesion++;
+	  }
+      }
+    return double(cohesion)/ double(neighboringTracts_.size());
+  }
+
 } /* namespace AIProj */
+

@@ -7,9 +7,36 @@
 
 #include <chrono>
 #include <iostream>
+#include <fstream>
 
 #include "District.h"
 #include "GameState.h"
+
+void printDistricts(std::vector<std::shared_ptr<AIProj::District>> &districts, AIProj::GameState &gState)
+{
+  std::ofstream fout("./results.csv");
+
+  for(auto dis : districts)
+    {
+      dis->dump(fout);
+    }
+
+  //Print any remaining tracts
+  if(gState.getAvailableTracts()->size() > 0)
+    {
+      auto tracts = gState.getAvailableTracts();
+      for(auto tct : *tracts)
+	{
+	  fout << "-," //Not assigned a district
+	      << "," << tct->getCountyId()
+	      << "," << tct->getFullTract()
+	      << "," << tct->getId()
+	      << std::endl;
+	}
+    }
+
+  fout.close();
+}
 
 int main(int argc, char *argv[])
 {
@@ -47,6 +74,9 @@ int main(int argc, char *argv[])
   std::cout << "Files loaded, preparing to start!\n"
       << gState.getAvailableTracts()->size()
       << " Tracts to be sorted.\n";
+
+  // Get starting timepoint
+  auto mainstart = std::chrono::high_resolution_clock::now();
 
   //Play the game
   bool movesMade = true;
@@ -86,10 +116,23 @@ int main(int argc, char *argv[])
       auto stop = std::chrono::high_resolution_clock::now();
 
       // use duration cast method
-      auto duration = std::chrono::duration_cast<std::chrono::minutes>(stop - start);
+      auto duration = std::chrono::duration_cast<std::chrono::seconds>(stop - start);
       std::cout << "Elapsed time: "
-	  << duration.count() << std::endl << std::flush;
+	  << duration.count() <<  " seconds"
+	  << std::endl << std::flush;
     }
+
+  // Get ending timepoint
+  auto mainstop = std::chrono::high_resolution_clock::now();
+
+  // use duration cast method
+  auto duration = std::chrono::duration_cast<std::chrono::minutes>(mainstop - mainstart);
+  std::cout << "Total Elapsed time: "
+	  << duration.count() << " minutes"
+	  << std::endl << std::flush;
+
+  //Print the results
+  printDistricts(districts,gState);
 
   if( !movesMade )
     {

@@ -14,6 +14,19 @@ namespace AIProj
      population_(pop),
      attributeMap_(metricMap)
   {
+    //Initialize the attribute fractions
+    for(auto metric : attributeMap_)
+      {
+	if(pop == 0)
+	  {
+	    attributeFraction_[metric.first] = 0;
+	  }
+	else
+	  {
+	    attributeFraction_[metric.first] = double(metric.second)/double(pop);
+	  }
+      }
+
   }
 /*
   Tract::Tract (char C_STATE, int C_TRACT, int C_AREALAND, int C_POP100, int C_H001001, int C_H002001, int C_H002005, int C_H003001, int C_H003002, int C_H003003, int C_P001001, int C_P002001, int C_P002002, int C_P002005, int C_P003001, int C_P003002, int C_P003003, int C_P003004, int C_P003005, int C_P003006, int C_P003007, int C_P003008, int C_P003009, int C_P003010, int C_P003026, int C_P003047, int C_P003063, int C_P003070, int C_P004001, int C_P004002, int C_P004003, int C_P012001, int C_P012002, int C_P012026, int C_P012A001, int C_P012A002, int C_P012A026, int C_P012B001, int C_P012B002, int C_P012B026, int C_P012C001, int C_P012C002, int C_P012C026, int C_P012D001, int C_P012D002, int C_P012D026, int C_P012E001, int C_P012E002, int C_P012E026, int C_P012F001, int C_P012F002, int C_P012F026, int C_P012G001, int C_P012G002, int C_P012G026, int C_P012H001, int C_P012H002, int C_P012H026, int C_P012I001, int C_P012I002, int C_P012I026, int C_P013001, int C_P013A001, int C_P013B001, int C_P013C001, int C_P013D001, int C_P013E001, int C_P013F001, int C_P013G001, int C_P013H001, int C_P013I001)
@@ -97,20 +110,20 @@ namespace AIProj
     // TODO Auto-generated destructor stub
   }
 
-  void
-  Tract::addAttributes (std::vector<std::pair<tractMetric, size_t> > attributes)
-  {
-    for(auto vecItr : attributes )
-      {
-	attributeMap_[vecItr.first] = vecItr.second;
-      }
-  }
-
-  void
-  Tract::addAttribute (const tractMetric& metric, size_t value)
-  {
-    attributeMap_[metric] = value;
-  }
+//  void
+//  Tract::addAttributes (std::vector<std::pair<tractMetric, size_t> > attributes)
+//  {
+//    for(auto vecItr : attributes )
+//      {
+//	attributeMap_[vecItr.first] = vecItr.second;
+//      }
+//  }
+//
+//  void
+//  Tract::addAttribute (const tractMetric& metric, size_t value)
+//  {
+//    attributeMap_[metric] = value;
+//  }
 
   bool
   Tract::hasAttribute (const tractMetric& metric) const
@@ -122,6 +135,14 @@ namespace AIProj
   Tract::getAttributeValue (const tractMetric& metric) const
   {
     return attributeMap_.at(metric);
+  }
+
+
+  double
+  Tract::getAttributeFraction(const tractMetric& metric) const
+  {
+    return attributeFraction_.at(metric);
+
   }
 
 } /* namespace AIProj */

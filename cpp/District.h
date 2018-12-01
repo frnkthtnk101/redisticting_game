@@ -24,10 +24,17 @@ namespace AIProj
   {
   public:
 
-    District ();
+    District (districtId dId);
     virtual
     ~District ();
 
+    /**
+     * @brief Factory method to create districts from a file.
+     * @param starterFile
+     * @return
+     */
+    static std::map<districtId, tractId> createDistricts(std::string starterFile,
+							 std::vector<std::shared_ptr<AIProj::District>> &districts);
     /**
      * @brief Retrieves the current district population
      * @return
@@ -66,12 +73,13 @@ namespace AIProj
      * @param The id of the tract to be added
      * @return if the add was successful
      */
-    void addTract(const Tract* trct) { ownedTracts_.insert(trct); };
+    void addTract(std::shared_ptr<AIProj::Tract> trct) ;
+    void addFirstTract(std::shared_ptr<AIProj::Tract> trct) ;
 
     /**
      * @brief Retrieves the tracts already owned by this district
      */
-    const std::set<const Tract*>& getTracts( void ) const { return ownedTracts_; };
+    const std::set<std::shared_ptr<AIProj::Tract> >& getTracts( void ) const { return ownedTracts_; };
 
     /**
      * @brief Get/Set for the static target population values
@@ -87,7 +95,6 @@ namespace AIProj
     bool similar(std::shared_ptr<AIProj::Tract>  tract);
     bool noRacialBias(std::shared_ptr<AIProj::Tract> tract);
 
-    static size_t idCounter_;
     static size_t similarityLimit_;
     static int targetPopulation_;
     static size_t tractChoiceDepth_;
@@ -95,10 +102,54 @@ namespace AIProj
     size_t districtId_;
     int population_;
 
-    std::set<const Tract*> ownedTracts_;
+    std::set<std::shared_ptr<AIProj::Tract>> ownedTracts_;
     std::map<tractMetric, size_t> metricTotals_;
+    std::map<tractMetric, double> metricFractions_;
   };
 
+  /**
+   * @brief Add the tract to our list & update our totals
+   * @param The id of the tract to be added
+   * @return if the add was successful
+   */
+  inline void District::addTract(std::shared_ptr<AIProj::Tract> trct)
+  {
+    ownedTracts_.insert(trct);
+    auto tctMetrics = trct->getAttributeMap();
+
+    //If this is the first time we're running this we need to initialize the totals
+    if(metricTotals_.size() == 0)
+      {
+	population_ = trct->getPopulation();
+
+	for(auto metric : tctMetrics)
+	  {
+	    metricTotals_[metric.first] = metric.second;
+
+	    if(population_ == 0)
+	      {
+		metricFractions_[metric.first] = double(metricTotals_[metric.first]);
+	      }
+	    else
+	      {
+		metricFractions_[metric.first] = double(metricTotals_[metric.first]) / double(population_);
+	      }
+	  }
+      }
+    else
+      {
+	population_ += trct->getPopulation();
+	for(auto metric : tctMetrics)
+	  {
+	    metricTotals_[metric.first] += metric.second;
+	    metricFractions_[metric.first] = double(metricTotals_[metric.first]) / double(population_);
+	  }
+      }
+  };
+
+
 } /* namespace AIProj */
+
+
 
 #endif /* DISTRICT_H_ */

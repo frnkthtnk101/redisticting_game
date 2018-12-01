@@ -8,23 +8,25 @@
 
 #include "GameState.h"
 
+#include <cstring>
 #include <cstdlib>
 #include <map>
 #include <set>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 namespace AIProj
 {
 
-  size_t District::idCounter_ = 0;
   int District::targetPopulation_ = 0;
   size_t District::similarityLimit_ = 55;
   size_t District::tractChoiceDepth_ = 1;
 
-  District::District ()
-  : districtId_(idCounter_),
+  District::District (districtId dId)
+  : districtId_(dId),
 	population_(0)
   {
-	  idCounter_++;
   }
 
   District::~District ()
@@ -47,6 +49,10 @@ District::makeTractDecision (AIProj::GameState &gState )
 
   for(auto tct :*availableTracts)
     {
+      //????????????
+//      std::cout << "   Start Tract " << tct->getId()
+//	  << std::endl << std::flush;
+      //????????????
       //Determine the tracts voice
       int voice = 0;
       std::set<tractId> ignoreList;
@@ -57,13 +63,19 @@ District::makeTractDecision (AIProj::GameState &gState )
 	 bestVoice = voice;
 	 bestTract = tct;
 	}
+      //????????????
+//      std::cout << "   -->End Tract " << tct->getId()
+//	  << std::endl << std::flush;
+      //????????????
     }
 
   //Select the best tract
-  tractId rValue = std::make_pair(0,0);
+  tractId rValue = 0;
   if(bestTract)
     {
       rValue = bestTract->getId();
+
+      addTract(bestTract);
     }
   return rValue;
 }
@@ -75,15 +87,15 @@ District::calculateChoice (int &voice,
 			   AIProj::GameState &gState,
 			   std::set<tractId> &ignoreList)
 {
-  //TODO: Populations of all districts must be within 10% of each other
-  if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
+  //if( std::abs(targetPopulation_- (tct->getPopulation() + getCurrentPopulation())) == 0
+  if( targetPopulation_> (tct->getPopulation() + population_)
       && noRacialBias(tct) )
     {
       voice++; //???? Is this supposed to be here? why yes it is
       if(similar(tct))
-	    {
-	      voice++;
-	    }
+	{
+	  voice++;
+	}
 
       //Make sure we don't reconsider this tract
       ignoreList.insert(tct->getId()); //ok i like it. I think i know why you did this
@@ -110,21 +122,17 @@ bool District::noRacialBias(std::shared_ptr<AIProj::Tract> tract)
 bool
 District::similar(std::shared_ptr<AIProj::Tract>  tct)
 {
-  //TODO
-//  disimilarity = 0 ;
-//  Tract_index = -1
-
   size_t disimilarity = 0;
-  auto tctMetrics = tct->getAttributeMap();
+  auto tctMetrics = tct->getAttributeFractionMap();
 
   for(auto metric : tctMetrics )
     {
       if( similarityLimit_ > disimilarity)
 	{
-    int mtf= metricTotals_.at(metric.first);
-    if(mtf - ( mtf * .1)<= metric.second && metric.second <= mtf + ( mtf * .1)) //??
-	  //if(metric.second == metricTotals_.at(metric.first)) //TODO:?? Is equality the right thing here 
-    ///I aggree with you maybe a 10% range both ways. 
+	  double mtf= metricFractions_.at(metric.first);
+	  double mtfRange = mtf * 0.1;
+	  if(  ((mtf - mtfRange)<= metric.second )
+	      && (metric.second <= (mtf + mtfRange)) )//??
 	    {
 	      continue;
 	    }
@@ -142,5 +150,47 @@ District::similar(std::shared_ptr<AIProj::Tract>  tct)
   return true;
 }
 
+std::map<districtId, tractId>
+District::createDistricts (std::string starterFile, std::vector<std::shared_ptr<AIProj::District>> &districts)
+{
+  std::map<districtId, tractId> alignmentMap;
+
+  //Open the district data file
+  std::ifstream dFile(starterFile);
+  std::string temp;
+
+  if(! dFile.is_open())
+    {
+      const char * errorStr = std::strerror(errno);
+
+      std::cerr << "Failure to open starter file "
+	  << starterFile << ": " << errorStr
+	  << std::endl << std::flush;
+      exit(EXIT_FAILURE);
+    }
+  //Get the header
+  std::getline(dFile,temp);
+
+  //Read in the pairs, saving them off and creating districts for each
+  while(std::getline(dFile,temp))
+    {
+      //Read input line
+      std::stringstream line(temp);
+
+      size_t dId, tId;
+      char comma;
+      line >> dId >> comma >> tId;
+
+      //Process into map
+      alignmentMap[dId] = tId;
+
+      //Create a district
+      std::shared_ptr<District> district(new District(dId));
+      districts.push_back(district);
+    }
+
+  return alignmentMap;
+}
 
 } /* namespace AIProj */
+

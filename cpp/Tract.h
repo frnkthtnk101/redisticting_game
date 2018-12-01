@@ -5,6 +5,7 @@
  */
 
 #include <map>
+#include <memory>
 #include <set>
 #include <string>
 #include <vector>
@@ -15,7 +16,7 @@ using namespace std;
 
 namespace AIProj
 {
-  typedef std::pair<size_t,size_t> tractId; //County Id, Tract Id
+  typedef size_t tractId; //fid
   typedef std::string tractMetric;
 
 
@@ -30,22 +31,27 @@ namespace AIProj
 
     int getPopulation(void) const { return population_; };
 
-    void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
-    const std::set<tractId>& getNeighbors(void) const { return neighboringTracts_; };
+    //void addNeighbors(const std::set<tractId> &nghbor) { neighboringTracts_ = nghbor; } ;
+    void addNeighbor(std::shared_ptr<Tract> nghbor) { if(nghbor->getId() != tractId_ ) neighboringTracts_.insert(nghbor); } ;
+    std::set<std::shared_ptr<Tract> > getNeighbors(void) const { return neighboringTracts_; }; //Return by copy
+    const std::set<std::shared_ptr<Tract> > & getNeighborsByRef(void) const { return neighboringTracts_; }; //Return by copy
 
-    void addAttributes(std::vector<std::pair<tractMetric,size_t> >);
-    void addAttribute( const tractMetric&,size_t);
+    //void addAttributes(std::vector<std::pair<tractMetric,size_t> >);
+    //void addAttribute( const tractMetric&,size_t);
     bool hasAttribute(const tractMetric&) const;
     size_t getAttributeValue(const tractMetric&) const;
+    double getAttributeFraction(const tractMetric&) const;
 
     const std::map<tractMetric,size_t>& getAttributeMap(void) const { return attributeMap_; };
+    const std::map<tractMetric,double>& getAttributeFractionMap(void) const { return attributeFraction_; };
 
   private:
 
     tractId tractId_;
     int population_;
     std::map<tractMetric,size_t> attributeMap_;
-    std::set<tractId> neighboringTracts_;
+    std::map<tractMetric,double> attributeFraction_;
+    std::set<std::shared_ptr<Tract> > neighboringTracts_;
   };
 
 } /* namespace AIProj */

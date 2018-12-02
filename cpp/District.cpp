@@ -66,15 +66,24 @@ District::makeTractDecision (AIProj::GameState &gState )
   for(auto tct :*availableTracts)
     {
       //????????????
-//      std::cout << "   Start Tract " << tct->getId()
-//	  << std::endl << std::flush;
+      std::cout << "   Start Tract " << tct->getId()
+	  << std::endl << std::flush;
       //????????????
       //Determine the tracts voice
       int voice = 0;
       std::set<tractId> ignoreList;
+      //?????????????
+      std::cout << "    mTD1" << std::endl << std::flush;
+      //?????????????
       calculateChoice(voice, tct, tractChoiceDepth_,gState,ignoreList);
+      //?????????????
+      std::cout << "    mTD2" << std::endl << std::flush;
+      //?????????????
       double cohesion = tct->getCohesionValue(districtId_);
 
+      //?????????????
+      std::cout << "    mTD3" << std::endl << std::flush;
+      //?????????????
       //Prefer county voice
       if(tct->getCountyId() != lastCounty_)
         {
@@ -114,13 +123,21 @@ District::makeTractDecision (AIProj::GameState &gState )
       //????????????
     }
 
+  //?????????????
+  std::cout << "    mTD4" << std::endl << std::flush;
+  //?????????????
+
   //Select the best tract
   tractId rValue = 0;
   if(bestTract || wBestTract || cBestTract )
     {
       double newWeight = double(bestVoice) * bestCohesion;
       double cWeight = double(cBestVoice) * cBestCohesion;
-      std::shared_ptr<AIProj::Tract> finalBest = decideOnBestTract(bestTract,
+
+      //?????????????
+      std::cout << "    mTD5" << std::endl << std::flush;
+      //?????????????
+      std::shared_ptr<AIProj::Tract> &finalBest = decideOnBestTract(bestTract,
 								    bestVoice,
 								    bestCohesion,
 								    newWeight,
@@ -132,7 +149,14 @@ District::makeTractDecision (AIProj::GameState &gState )
 								    wBestVoice,
 								    wBestCohesion,
 								    weight);
+
+      //?????????????
+      std::cout << "    mTD6" << std::endl << std::flush;
+      //?????????????
       rValue = finalBest->getId();
+      //?????????????
+      std::cout << "    mTD7" << std::endl << std::flush;
+      //?????????????
     }
 
   return rValue;
@@ -298,7 +322,7 @@ District::dumpMetrics (std::ofstream& fout)
 
 }
 
-std::shared_ptr<Tract>
+std::shared_ptr<Tract> &
 District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
 			    int &bestVoice,
 			    double &bestCohesion,
@@ -312,7 +336,7 @@ District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
 			    double &wBestCohesion,
 			    double &wBestWeight)
 {
-  std::shared_ptr<Tract> finalBest;
+  std::shared_ptr<Tract> &finalBest = bestVoiceT;
 
   if(bestVoiceT && bestWeightT && cBestCohesionT)
     {
@@ -356,6 +380,11 @@ District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
     {
       finalBest = bestWeightT;
       addTract(bestWeightT);
+    }
+  else
+    {
+      finalBest = cBestCohesionT;
+      addTract(cBestCohesionT);
     }
 
   return finalBest;

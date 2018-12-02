@@ -98,7 +98,7 @@ namespace AIProj
     bool similar(std::shared_ptr<AIProj::Tract>  tract);
     bool noRacialBias(std::shared_ptr<AIProj::Tract> tract);
 
-    std::shared_ptr<Tract> decideOnBestTract (std::shared_ptr<Tract> &bestVoiceT,
+    std::shared_ptr<Tract> &decideOnBestTract (std::shared_ptr<Tract> &bestVoiceT,
     			    int &bestVoice,
     			    double &bestCohesion,
     			    double &bestWeight,

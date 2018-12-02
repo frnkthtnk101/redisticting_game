@@ -91,6 +91,8 @@ namespace AIProj
     size_t getId() const { return districtId_; };
 
     void dump(std::ofstream &fout);
+    void dumpMetrics(std::ofstream &fout);
+    void dumpMetricHeader(std::ofstream &fout);
   private:
 
     bool similar(std::shared_ptr<AIProj::Tract>  tract);
@@ -100,7 +102,11 @@ namespace AIProj
     			    int &bestVoice,
     			    double &bestCohesion,
     			    double &bestWeight,
-    			    std::shared_ptr<Tract> &bestCohesionT,
+    			    std::shared_ptr<Tract> &cBestCohesionT,
+    			    int &cBestVoice,
+    			    double &cBestCohesion,
+    			    //double &cBestWeight,
+    			    std::shared_ptr<Tract> &wBestCohesionT,
     			    int &wBestVoice,
     			    double &wBestCohesion,
     			    double &wBestWeight);
@@ -108,13 +114,16 @@ namespace AIProj
     static size_t similarityLimit_;
     static int targetPopulation_;
     static size_t tractChoiceDepth_;
+    static int countyFactor_;
 
     size_t districtId_;
     int population_;
+    int lastCounty_;
 
     std::set<std::shared_ptr<AIProj::Tract>> ownedTracts_;
     std::map<tractMetric, size_t> metricTotals_;
     std::map<tractMetric, double> metricFractions_;
+    std::vector<tractMetric> metricNames_;
   };
 
   /**
@@ -129,6 +138,7 @@ namespace AIProj
 
     //Set the district id on the tract
     trct->setDistrictId(districtId_);
+    lastCounty_ = trct->getCountyId();
 
     //If this is the first time we're running this we need to initialize the totals
     if(metricTotals_.size() == 0)
@@ -138,6 +148,7 @@ namespace AIProj
 	for(auto metric : tctMetrics)
 	  {
 	    metricTotals_[metric.first] = metric.second;
+	    metricNames_.push_back(metric.first);
 
 	    if(population_ == 0)
 	      {

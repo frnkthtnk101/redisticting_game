@@ -23,6 +23,7 @@ namespace AIProj
   int District::targetPopulation_ = 0;
   size_t District::similarityLimit_ = 55;
   size_t District::tractChoiceDepth_ = 1;
+  int District::countyFactor_ = 5;
 
   District::District (districtId dId)
   : districtId_(dId),
@@ -50,6 +51,11 @@ District::makeTractDecision (AIProj::GameState &gState )
   double bestCohesion = 0.0;
   std::shared_ptr<AIProj::Tract> bestTract;
 
+  //The best cohesion
+  int cBestVoice = 0;
+  double cBestCohesion = 0.0;
+  std::shared_ptr<AIProj::Tract> cBestTract;
+
   //The weighted best
   int wBestVoice = 0;
   double wBestCohesion = 0.0;
@@ -69,6 +75,12 @@ District::makeTractDecision (AIProj::GameState &gState )
       calculateChoice(voice, tct, tractChoiceDepth_,gState,ignoreList);
       double cohesion = tct->getCohesionValue(districtId_);
 
+      //Prefer county voice
+      if(tct->getCountyId() != lastCounty_)
+        {
+          voice += countyFactor_;
+        }
+
       //Test for best case
       if( (voice > bestVoice)
 	  && (cohesion > bestCohesion ))
@@ -76,6 +88,14 @@ District::makeTractDecision (AIProj::GameState &gState )
 	 bestVoice = voice;
 	 bestTract = tct;
 	 bestCohesion = cohesion;
+	}
+
+      //Test for best cohesion
+      if( cohesion > cBestCohesion)
+	{
+	 cBestVoice = voice;
+	 cBestTract = tct;
+	 cBestCohesion = cohesion;
 	}
 
       //Test for weighted best
@@ -96,13 +116,18 @@ District::makeTractDecision (AIProj::GameState &gState )
 
   //Select the best tract
   tractId rValue = 0;
-  if(bestTract || wBestTract)
+  if(bestTract || wBestTract || cBestTract )
     {
       double newWeight = double(bestVoice) * bestCohesion;
+      double cWeight = double(cBestVoice) * cBestCohesion;
       std::shared_ptr<AIProj::Tract> finalBest = decideOnBestTract(bestTract,
 								    bestVoice,
 								    bestCohesion,
 								    newWeight,
+								    cBestTract,
+								    cBestVoice,
+								    cBestCohesion,
+								    //cWeight,
 								    wBestTract,
 								    wBestVoice,
 								    wBestCohesion,
@@ -124,7 +149,7 @@ District::calculateChoice (int &voice,
   if( targetPopulation_> (tct->getPopulation() + population_)
       && noRacialBias(tct) )
     {
-      voice++; //???? Is this supposed to be here? why yes it is
+      voice++;
       if(similar(tct))
 	{
 	  voice++;
@@ -237,12 +262,51 @@ District::dump (std::ofstream& fout)
 	    << std::endl;
       }
 }
+void
+District::dumpMetricHeader(std::ofstream& fout)
+{
+  //Basic Data
+  fout << "districtId,"
+      << "population,"
+      << "PopPercentOfTarget";
+
+  //Metrics
+  for(auto mT : metricNames_)
+    {
+      fout << "," << mT;
+    }
+
+  fout << std::endl;
+
+}
+
+void
+District::dumpMetrics (std::ofstream& fout)
+{
+  //Basic Data
+  fout << districtId_ << ","
+      << population_ << ","
+      << (double(population_) / double(targetPopulation_))*100.0 << "%";
+
+  //Metrics
+  for(auto mT : metricNames_)
+    {
+      fout << "," << metricTotals_.at(mT);
+    }
+
+  fout << std::endl;
+
+}
 
 std::shared_ptr<Tract>
 District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
 			    int &bestVoice,
 			    double &bestCohesion,
 			    double &bestWeight,
+    			    std::shared_ptr<Tract> &cBestCohesionT,
+    			    int &cBestVoice,
+    			    double &cBestCohesion,
+    			    //double &cBestWeight,
 			    std::shared_ptr<Tract> &bestWeightT,
 			    int &wBestVoice,
 			    double &wBestCohesion,
@@ -250,10 +314,11 @@ District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
 {
   std::shared_ptr<Tract> finalBest;
 
-  if(bestVoiceT && bestWeightT)
+  if(bestVoiceT && bestWeightT && cBestCohesionT)
     {
       //If they're the same, easy
-      if(bestVoiceT == bestWeightT )
+      if( (bestVoiceT == bestWeightT )
+	  && (bestVoiceT == cBestCohesionT ) )
 	{
 	  finalBest = bestVoiceT;
 	  addTract(bestVoiceT);
@@ -261,15 +326,19 @@ District::decideOnBestTract(std::shared_ptr<Tract> &bestVoiceT,
       //Need to actually decide between them
       else
 	{
-	  double bestWeight = double(bestVoice) * bestCohesion;
-
+	  //If there is one at close to 100% cohesion, go with that (try to prevent islands)
+	  if(cBestCohesion > 0.95)
+	    {
+	      finalBest = cBestCohesionT;
+	      addTract(cBestCohesionT);
+	    }
 	  //If they'e close in weight, go with the one most reflective of the tract
-	  if( std::abs(bestWeight-wBestWeight) > 0.10)
+	  else if( std::abs(bestWeight-wBestWeight) > 0.10)
 	    {
 	      finalBest = bestVoiceT;
 	      addTract(bestVoiceT);
 	    }
-	  else //Go with the most cohesive
+	  else //Go with the best weight
 	    {
 	      finalBest = bestWeightT;
 	      addTract(bestWeightT);

@@ -5,6 +5,7 @@
  *      Author: ShadRS
  */
 
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <fstream>
@@ -15,10 +16,14 @@
 void printDistricts(std::vector<std::shared_ptr<AIProj::District>> &districts, AIProj::GameState &gState)
 {
   std::ofstream fout("./results.csv");
+  std::ofstream fout2("./results2.csv");
+  (districts[0])->dumpMetricHeader(fout2);
 
   for(auto dis : districts)
     {
       dis->dump(fout);
+
+      dis->dumpMetrics(fout2);
     }
 
   //Print any remaining tracts
@@ -36,6 +41,11 @@ void printDistricts(std::vector<std::shared_ptr<AIProj::District>> &districts, A
     }
 
   fout.close();
+}
+
+bool districtSorter(const std::shared_ptr<AIProj::District> &left, const std::shared_ptr<AIProj::District> &right)
+{
+  return left->getCurrentPopulation() < right->getCurrentPopulation();
 }
 
 int main(int argc, char *argv[])
@@ -92,6 +102,9 @@ int main(int argc, char *argv[])
 
       //To prevent getting stuck due to size constraints
       movesMade = false;
+
+      //Sort the districts in low pop to high
+      std::sort(districts.begin(), districts.end(), districtSorter);
 
       //Cycle through the districts
       for(auto dist : districts)

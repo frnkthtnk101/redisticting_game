@@ -5,6 +5,7 @@
 import shapefile
 import numpy as np
 import csv
+#import arcpy
 from matplotlib import pyplot as plt
 from descartes import PolygonPatch
 from shapely.geometry import Polygon
@@ -16,29 +17,30 @@ with open('/Users/francopettigrosso/ws/redisticting_game/python/districts.csv','
     reader = csv.DictReader(csvfile)
     for row in reader:
         tract_info.append(row)
-
+count = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,]
 colors = [
-    '#02ff85',
-    '#ff027c',
-    '#ff8502',
-    '#027cff',
-    '#0004ff',
-    '#fffb00',
-    '#04ff00',
-    '#fb00ff',
-    '#a5a7ff',
-    '#fffea5',
-    '#a7ffa5',
-    '#fea5ff',
-    '#ffacda',
-    '#acffd3',
-    '#acdaff',
-    '#ffd3ac',
-    '#ff01fb',
-    '#ff0901',
-    '#01fbff',
-    '#01ff09',
-    '#000000'
+    '',
+'#02ff85',
+'#ff027c',
+'#ff8502',
+'#027cff',
+'#0004ff',
+'#fffb00',
+'#04ff00',
+'#fb00ff',
+'#a5a7ff',
+'#635b69',
+'#a7ffa5',
+'#265363',
+'#ffacda',
+'#acffd3',
+'#acdaff',
+'#ffd3ac',
+'#ff01fb',
+'#660948',
+'#01fbff',
+'#01ff09',
+'#ffffff'
 
 ]
 
@@ -65,6 +67,7 @@ for shaperec in list(sf.iterShapeRecords()):
             number = int(dist_row['Districtnum'].replace('-','-1'))
             if number == -1:
                 i += 1
+            count[number]+=1
             print(dist_row)
             break 
     
@@ -73,9 +76,9 @@ for shaperec in list(sf.iterShapeRecords()):
     if nparts == 1:
         polygon = Polygon(shape.points)
         patch = PolygonPatch(polygon,facecolor=color,alpha=1,zorder=1)
-        patch.set_linewidth(None)
-        #patch.set_edgecolor('none')
-        patch.set_edgecolor(color)
+        patch.set_edgecolor('#000000')
+        #patch.set_edgecolor(color)
+        patch.set_label(f'county: {rec[5]} tract: {rec[6]}')
         ax.add_patch(patch)
     else:
         for ip in range(nparts):
@@ -86,12 +89,12 @@ for shaperec in list(sf.iterShapeRecords()):
                 i1 = len(shape.points)
             polygon = Polygon(shape.points[i0:i1+1])
             patch = PolygonPatch(polygon,facecolor=color,alpha = 1 , zorder = 1)
-            patch.set_linewidth(None)
-            #patch.set_edgecolor('none')
-            patch.set_edgecolor(color)
+            patch.set_edgecolor('#000000')
+            #patch.set_edgecolor(color)
+            patch.set_label(f'county: {rec[5]} tract: {rec[6]}')
             ax.add_patch(patch)
 
-
+print(count)
 print(i)
 plt.xlim(-81,-74.5)
 plt.ylim(39.7,42.5)
